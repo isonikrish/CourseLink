@@ -15,7 +15,7 @@ export const generateTokenAndSetCookie = async (payload: any, c: Context) => {
       secure: true,
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
-      sameSite: "None",
+      sameSite: "Lax",
     });
   } catch (error) {
     console.error(error);

@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
+import { useAuth } from "../stores/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function Authentication() {
   const [isLogin, setIsLogin] = useState(false);
-
+  const {user} = useAuth()
+  const navigate = useNavigate()
+  useEffect(()=>{
+    if(user){
+      navigate('/')
+    }
+  },[user])
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="rounded-lg p-8 border-2 border-base-300 shadow-lg mt-4">

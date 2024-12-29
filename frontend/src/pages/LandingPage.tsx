@@ -1,8 +1,18 @@
 import { MoveRight } from "lucide-react";
 import Features from "../components/Features";
 import Pricing from "../components/Pricing";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../stores/useAuth";
 
 function Home() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [user]);
   return (
     <div>
       <div className="hero h-screen">

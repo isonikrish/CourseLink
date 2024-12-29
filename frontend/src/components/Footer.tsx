@@ -25,7 +25,7 @@ export function Footer() {
           </Link>
           <Link
             to="https://x.com/isonikrish"
-            target="_blank"
+
             rel="noopener noreferrer"
           >
             <FaXTwitter className="h-6 w-6" />

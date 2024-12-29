@@ -15,9 +15,20 @@ model User {
   email     String  @unique
   password  String 
   role Role
+  createdCourses Course[]
 }
+
+model Course {
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  thumbnail String? @default("")
+  tutorId Int
+  tutor User @relation(fields: [tutorId], references: [id])
+} 
 
 enum Role {
   student
   tutor
 }
+

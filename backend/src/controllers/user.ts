@@ -3,6 +3,7 @@ import { loginSchema, signupSchema } from "../utils/zodSchemas";
 import { prismaClient } from "../utils/prismaClient";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateToken";
+import { getCookie, setCookie } from "hono/cookie";
 
 export const handleSignup = async (c: Context) => {
   const prisma = prismaClient(c);
@@ -83,5 +84,36 @@ export const handleLogin = async (c: Context) => {
   } catch (error) {
     console.error({ error, msg: "Got error while signup" });
     return c.json({ msg: "Internal Server Error" }, 500);
+  }
+};
+
+export const handleGetMe = async (c: Context) => {
+  try {
+    const user = c.get("user");
+    return c.json(user, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+};
+export const handleLogout = async (c: Context) => {
+  try {
+    const token = getCookie(c, "token");
+    if (!token) {
+      return c.json({ msg: "Unauthorized" }, 401);
+    }
+
+    // Clear the token cookie
+    setCookie(c, "token", "", {
+      httpOnly: true,
+      secure: true,
+      maxAge: 0,
+      path: "/",
+      sameSite: "Lax",
+    });
+
+    return c.json({ msg: "Logout successful." }, 200);
+  } catch (error) {
+    console.error("Error during logout:", error);
+    return c.json({ msg: "Internal server error." }, 500);
   }
 };

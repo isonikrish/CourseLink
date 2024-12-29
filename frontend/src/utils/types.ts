@@ -17,5 +17,14 @@ export type User = {
   email: String;
   firstName: String;
   lastName: String;
-  role: String;
+  role: String; //  TODO : ADD COURSES FROM USER 
 }
+export type courseFromData = {
+  title: String,
+  description: String,
+}
+export type course = {
+  id: Number,
+  tutorId: Number,
+  tutor: User
+} & courseFromData
