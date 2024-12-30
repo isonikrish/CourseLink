@@ -113,7 +113,25 @@ export const handleLogout = async (c: Context) => {
 
     return c.json({ msg: "Logout successful." }, 200);
   } catch (error) {
-    console.error("Error during logout:", error);
+    return c.json({ msg: "Internal server error." }, 500);
+  }
+};
+
+export const handleGetUser = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const id = c.req.param("id");
+  try {
+    
+    if (!id) return c.json({ msg: "No id provided" }, 400);
+    const userId = parseInt(id, 10);
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) return c.json({ msg: "No user found" }, 400);
+
+    return c.json(user, 200);
+  } catch (error) {
     return c.json({ msg: "Internal server error." }, 500);
   }
 };

@@ -5,7 +5,7 @@ import { useAuth } from "../stores/useAuth";
 import { useNavigate } from "react-router-dom";
 
 function Authentication() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const {user} = useAuth()
   const navigate = useNavigate()
   useEffect(()=>{

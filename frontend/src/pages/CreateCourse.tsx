@@ -3,15 +3,19 @@ import { courseFromData } from "../utils/types";
 import { useCourse } from "../stores/useCourse";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../stores/useAuth";
 
 function CreateCourse() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState<courseFromData>({
     title: "",
     description: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const { createCourse } = useCourse();
+  const { user } = useAuth();
   const handleCreateCourse = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -19,8 +23,10 @@ function CreateCourse() {
     try {
       const response = await createCourse(formData);
       if (response?.status === 200) {
+        queryClient.invalidateQueries<any>(["courses", user?.id]);
         navigate(`/course/${response.data.id}`);
-        toast.success("Course Created")
+
+        toast.success("Course Created");
       } else {
         toast.error("Failed to create course.");
       }
@@ -52,6 +58,9 @@ function CreateCourse() {
               setFormData({ ...formData, title: e.target.value })
             }
           />
+          <p className="text-sm text-gray-500 mt-1">
+            Title must be at least 5 characters long.
+          </p>
         </div>
 
         <div className="form-control w-full">

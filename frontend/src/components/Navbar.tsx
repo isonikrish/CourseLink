@@ -38,10 +38,8 @@ function Navbar() {
           </div>
         </label>
 
-
         {user ? (
           <div className="flex items-center gap-6">
-
             <label className="input input-bordered flex items-center gap-2">
               <Search className="w-5 h-5" />
               <input
@@ -69,28 +67,38 @@ function Navbar() {
                 className="menu menu-lg dropdown-content bg-base-100 rounded-lg z-[1] mt-3 w-52 p-2 shadow"
               >
                 <li className="border-b border-base-300">
-                  <a>
+                  <Link to={`/profile/${user?.id}`}>
                     <UserRound className="w-5 h-5" />
                     Profile
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a className="flex gap-3">
-                    <BookOpen className="w-5 h-5" />
-                    {isTutor ? <p>My Courses</p>: <p className="text-wrap">My Enrollments</p>}
-                  </a>
+                  {isTutor ? (
+                    <Link to={"/my-courses"} className="flex gap-3">
+                      <BookOpen className="w-5 h-5" />
+                      <p>My Courses</p>
+                    </Link>
+                  ) : (
+                    <Link to={"/enrolled-courses"} className="flex gap-3">
+                      <BookOpen className="w-5 h-5" />
+                      <p className="text-wrap">My Enrollments</p>
+                    </Link>
+                  )}
                 </li>
 
                 {isTutor && (
                   <li>
-                    <Link to={'/create-course'}>
+                    <Link to={"/create-course"}>
                       <Plus className="w-5 h-5" />
                       Create Course
                     </Link>
                   </li>
                 )}
 
-                <li className="border-t border-base-300" onClick={()=>logout()}>
+                <li
+                  className="border-t border-base-300"
+                  onClick={() => logout()}
+                >
                   <a>
                     <LogOut className="w-5 h-5" />
                     Logout
@@ -100,7 +108,6 @@ function Navbar() {
             </div>
           </div>
         ) : (
-
           <Link to={"/login"}>
             <button className="w-24 btn text-sm font-medium rounded-full px-4 py-2 shadow-[0px_-1px_0px_0px_#FFFFFF40_inset,_0px_2px_2px_0px_#FFFFFF40_inset]">
               Login

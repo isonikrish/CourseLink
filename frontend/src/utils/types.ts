@@ -28,3 +28,12 @@ export type course = {
   tutorId: Number,
   tutor: User
 } & courseFromData
+
+export type editCourse = {
+  title?: String,
+  description?: String,
+  price?: Number,
+  category?: String,
+
+  
+}

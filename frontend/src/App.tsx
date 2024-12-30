@@ -3,7 +3,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import useTheme from "./stores/useTheme";
 import LandingPage from "./pages/LandingPage";
-import Home from './pages/HomePage'
+import Home from "./pages/HomePage";
 import { Footer } from "./components/Footer";
 import Authentication from "./pages/Authentication";
 import { Toaster } from "react-hot-toast";
@@ -12,6 +12,9 @@ import { useAuth } from "./stores/useAuth";
 import { useEffect } from "react";
 import CreateCourse from "./pages/CreateCourse";
 import CourseDisplay from "./pages/CourseDisplay";
+import Profile from "./pages/Profile";
+import MyCourses from "./pages/MyCourses";
+import EditCourse from "./pages/EditCourse";
 
 function App() {
   const { isDarkMode } = useTheme();
@@ -27,9 +30,13 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Authentication />} />
-        <Route path="/home" element={<Home />}/>
+        <Route path="/home" element={<Home />} />
         <Route path="/create-course" element={<CreateCourse />} />
-        <Route path="/course/:id" element={<CourseDisplay />}/>
+        <Route path="/course/:id/edit" element={<EditCourse />} />
+        <Route path="/course/:id" element={<CourseDisplay />} />
+
+        <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/my-courses" element={<MyCourses />} />
       </Routes>
       <Footer />
       <Toaster />

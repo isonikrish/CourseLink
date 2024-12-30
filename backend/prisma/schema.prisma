@@ -25,6 +25,9 @@ model Course {
   thumbnail String? @default("")
   tutorId Int
   tutor User @relation(fields: [tutorId], references: [id])
+  price Int? @default(0)
+  category String?
+  status Status? @default(unpublished)
 } 
 
 enum Role {
@@ -32,3 +35,7 @@ enum Role {
   tutor
 }
 
+enum Status {
+  published
+  unpublished
+}

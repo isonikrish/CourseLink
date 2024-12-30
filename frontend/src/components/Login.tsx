@@ -6,7 +6,7 @@ import { useAuth } from "../stores/useAuth";
 function Login() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const [formData, setFormData] = useState<loginFormData>({
     email: "",
     password: "",
