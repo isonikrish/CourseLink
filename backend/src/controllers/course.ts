@@ -76,7 +76,11 @@ export const handleUpdateCourse = async (c: Context) => {
   const prisma = prismaClient(c);
   const id = c.req.param("id");
   const data = await c.req.json();
-  const courseId = parseInt(id);
+  const courseId = parseInt(id, 10);
+  if (isNaN(courseId)) {
+    return c.json({ msg: "Invalid course ID" }, 400);
+  }
+
   try {
     const validatedData = editCourse.safeParse(data);
     if (!validatedData.success) {
@@ -90,7 +94,6 @@ export const handleUpdateCourse = async (c: Context) => {
     }
 
     const { title, description, price, category } = validatedData.data;
-
     const updatedCourse = await prisma.course.update({
       where: { id: courseId },
       data: {
@@ -100,7 +103,35 @@ export const handleUpdateCourse = async (c: Context) => {
         category,
       },
     });
-    return c.json(updatedCourse, 200)
+    return c.json(updatedCourse, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+    console.log(error);
+  }
+};
+
+export const handleGetTutor = async (c: Context) => {
+  try {
+    const email = c.req.query("email");
+    if (!email) {
+      return c.json({ msg: "You havent provided email" }, 400);
+    }
+    const prisma = prismaClient(c);
+    let tutors = await prisma.user.findMany({
+      where: {
+        email: {
+          contains: email, // Partial match
+          mode: "insensitive", // Case insensitive
+        },
+        role: "tutor", // Ensure the role is 'tutor'
+      },
+    });
+
+    if (!tutors || tutors.length === 0) {
+      return c.json({ msg: "No relevant tutors found" }, 404);
+    }
+
+    return c.json(tutors, 200);
   } catch (error) {
     return c.json({ msg: "Internal Server Error" }, 500);
   }

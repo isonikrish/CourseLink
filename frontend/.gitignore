@@ -12,7 +12,6 @@ dist
 dist-ssr
 features.txt
 
-
 *.local
 
 # Editor directories and files

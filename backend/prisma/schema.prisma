@@ -9,26 +9,38 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  firstName String
-  lastName  String
-  email     String  @unique
-  password  String 
-  role Role
+  id             Int      @id @default(autoincrement())
+  firstName      String
+  lastName       String
+  email          String   @unique
+  password       String
+  role           Role
   createdCourses Course[]
+  coTutors  CoTutor[]
 }
 
 model Course {
-  id Int @id @default(autoincrement())
-  title String
+  id          Int       @id @default(autoincrement())
+  title       String
   description String
-  thumbnail String? @default("")
+  thumbnail   String?   @default("")
+  tutorId     Int
+  tutor       User      @relation(fields: [tutorId], references: [id])
+  price       Int?      @default(0)
+  category    String?
+  status      Status?   @default(unpublished)
+  coTutors    CoTutor[]
+}
+
+model CoTutor {
+  id       Int      @id @default(autoincrement())
+  courseId Int
+  course   Course   @relation(fields: [courseId], references: [id])
+  access   String[]
   tutorId Int
   tutor User @relation(fields: [tutorId], references: [id])
-  price Int? @default(0)
-  category String?
-  status Status? @default(unpublished)
-} 
+  permissions Permission[]
+}
 
 enum Role {
   student
@@ -38,4 +50,9 @@ enum Role {
 enum Status {
   published
   unpublished
+}
+enum Permission {
+  edit_course
+  add_lecture
+  change_course_status
 }

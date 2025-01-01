@@ -5,6 +5,7 @@ import EditPage from "../components/EditPage";
 import { useCourse } from "../stores/useCourse";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../stores/useAuth";
+import ManageCoTutors from "../components/ManageCoTutors";
 
 function EditCourse() {
   const [menu, setMenu] = useState("overview");
@@ -26,15 +27,13 @@ function EditCourse() {
 
     handleFetchCourse()
   }, [id, user]);
-  if(course){
-    console.log(course)
-  }
   return (
     <div className="flex w-full">
       <Sidebar setMenu={setMenu} />
       <div className="pt-16 w-full">
         {menu === "overview" && <Overview />}
         {menu === "edit" && <EditPage course={course}/>}
+        {menu === "manage" && <ManageCoTutors course={course} />}
       </div>
     </div>
   );

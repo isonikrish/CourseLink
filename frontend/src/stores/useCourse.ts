@@ -24,7 +24,7 @@ export const useCourse = create<Store>((set) => ({
   },
   editCourse: async (id: Number, data: editCourse) => {
     try {
-      const response = await axios.put(`${BACKEND_URL}/course/update-course/${id}`, data, {withCredentials: true});
+      const response = await axios.put(`${BACKEND_URL}/course/update-course/${id}`, data,{withCredentials: true});
       if (response.status === 200) {
         toast.success("Course Updated");
       }

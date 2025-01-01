@@ -34,6 +34,6 @@ export type editCourse = {
   description?: String,
   price?: Number,
   category?: String,
-
+  thumbnail?: any
   
 }

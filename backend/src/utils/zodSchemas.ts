@@ -48,4 +48,6 @@ export const loginSchema = z
     description: z.string().min(10, { message: "Description must be at least 10 characters long" }).optional(),
     price: z.number().optional(),
     category: z.string().optional(),
+    thumbnail: z.any()
+    .optional(),  
   })

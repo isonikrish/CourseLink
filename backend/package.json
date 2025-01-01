@@ -8,6 +8,7 @@
     "@prisma/client": "^6.1.0",
     "@prisma/extension-accelerate": "^1.2.1",
     "bcryptjs": "^2.4.3",
+    "formidable": "^3.5.2",
     "hono": "^4.6.14",
     "zod": "^3.24.1"
   },

@@ -2,8 +2,7 @@ import { useParams } from "react-router-dom";
 
 function Overview() {
   const { id } = useParams();
-  console.log(id);
-
+  
   const status = "unpublished";
 
   return (
