@@ -15,6 +15,7 @@ import CourseDisplay from "./pages/CourseDisplay";
 import Profile from "./pages/Profile";
 import MyCourses from "./pages/MyCourses";
 import EditCourse from "./pages/EditCourse";
+import Notifications from "./pages/Notifications";
 
 function App() {
   const { isDarkMode } = useTheme();
@@ -37,6 +38,7 @@ function App() {
 
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/my-courses" element={<MyCourses />} />
+        <Route path="/notifications" element={<Notifications />}/>
       </Routes>
       <Footer />
       <Toaster />

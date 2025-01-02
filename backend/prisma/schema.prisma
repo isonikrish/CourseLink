@@ -9,14 +9,16 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  firstName      String
-  lastName       String
-  email          String   @unique
-  password       String
-  role           Role
-  createdCourses Course[]
-  coTutors  CoTutor[]
+  id                    Int             @id @default(autoincrement())
+  firstName             String
+  lastName              String
+  email                 String          @unique
+  password              String
+  role                  Role
+  createdCourses        Course[]
+  coTutors              CoTutor[]
+  sentNotifications     Notifications[] @relation("FromUser")
+  receivedNotifications Notifications[] @relation("ToUser")
 }
 
 model Course {
@@ -30,16 +32,28 @@ model Course {
   category    String?
   status      Status?   @default(unpublished)
   coTutors    CoTutor[]
+  sentRequests Notifications[]
 }
 
 model CoTutor {
-  id       Int      @id @default(autoincrement())
-  courseId Int
-  course   Course   @relation(fields: [courseId], references: [id])
-  access   String[]
-  tutorId Int
-  tutor User @relation(fields: [tutorId], references: [id])
+  id          Int          @id @default(autoincrement())
+  courseId    Int
+  course      Course       @relation(fields: [courseId], references: [id])
+  access      String[]
+  tutorId     Int
+  tutor       User         @relation(fields: [tutorId], references: [id])
   permissions Permission[]
+}
+
+model Notifications {
+  id           Int          @id @default(autoincrement())
+  fromId       Int
+  fromUser     User         @relation("FromUser", fields: [fromId], references: [id])
+  toId         Int
+  toUser       User         @relation("ToUser", fields: [toId], references: [id])
+  notification Notification
+  courseId Int
+  course Course @relation(fields: [courseId], references: [id])
 }
 
 enum Role {
@@ -51,8 +65,13 @@ enum Status {
   published
   unpublished
 }
+
 enum Permission {
-  edit_course
-  add_lecture
-  change_course_status
+  edit
+  add
+  status
+}
+
+enum Notification {
+  request
 }

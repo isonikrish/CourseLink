@@ -120,10 +120,11 @@ export const handleLogout = async (c: Context) => {
 export const handleGetUser = async (c: Context) => {
   const prisma = prismaClient(c);
   const id = c.req.param("id");
+
   try {
-    
     if (!id) return c.json({ msg: "No id provided" }, 400);
     const userId = parseInt(id, 10);
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -131,6 +132,68 @@ export const handleGetUser = async (c: Context) => {
     if (!user) return c.json({ msg: "No user found" }, 400);
 
     return c.json(user, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal server error." }, 500);
+  }
+};
+
+export const handleSendRequest = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const { courseId } = await c.req.json();
+
+  const id = c.req.param("id");
+  const user = c.get("user");
+  if (!user || !user.id || !courseId) {
+    return c.json({ msg: "Unauthorized: User not found in context." }, 401);
+  }
+
+  try {
+    const parsedCourseId = parseInt(courseId);
+    const toId = parseInt(id);
+    if (isNaN(toId)) {
+      return c.json({ msg: "Invalid user ID." }, 400);
+    }
+    if (isNaN(parsedCourseId)) {
+      return c.json({ msg: "Invalid courseId." }, 400);
+    }
+    const isUserExists = await prisma.user.findFirst({ where: { id: toId } });
+    if (!isUserExists) return c.json({ msg: "No user exists" }, 404);
+
+    const newNotification = await prisma.notifications.create({
+      data: {
+        fromId: user.id,
+        toId: toId,
+        notification: "request",
+        courseId: parsedCourseId,
+      },
+    });
+    return c.json(newNotification, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal server error." }, 500);
+  }
+};
+
+export const handleGetNotifications = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const user = c.get("user");
+  try {
+    if (!user) {
+      return c.json({ msg: "Unauthorized: User not found in context." }, 401);
+    }
+
+    const notifications = await prisma.notifications.findMany({
+      where: { toId: user.id },
+      include: {
+        course:true,
+        fromUser:true
+
+      }
+    });
+    if (notifications.length === 0) {
+      return c.json([],200);
+    }
+
+    return c.json(notifications, 200);
   } catch (error) {
     return c.json({ msg: "Internal server error." }, 500);
   }

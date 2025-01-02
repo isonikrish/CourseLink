@@ -111,6 +111,7 @@ export const handleUpdateCourse = async (c: Context) => {
 };
 
 export const handleGetTutor = async (c: Context) => {
+  const user = c.get("user")
   try {
     const email = c.req.query("email");
     if (!email) {
@@ -130,6 +131,9 @@ export const handleGetTutor = async (c: Context) => {
     if (!tutors || tutors.length === 0) {
       return c.json({ msg: "No relevant tutors found" }, 404);
     }
+
+    tutors = tutors.filter((tutor:any) => tutor.id !== user.id);
+
 
     return c.json(tutors, 200);
   } catch (error) {

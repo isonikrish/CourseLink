@@ -1,4 +1,5 @@
 import {
+  Bell,
   BookOpen,
   LogOut,
   Moon,
@@ -85,7 +86,12 @@ function Navbar() {
                     </Link>
                   )}
                 </li>
-
+                <li>
+                  <Link to={`/notifications`}>
+                    <Bell className="w-5 h-5" />
+                    Notifications
+                  </Link>
+                </li>
                 {isTutor && (
                   <li>
                     <Link to={"/create-course"}>

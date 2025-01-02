@@ -15,7 +15,7 @@ function ManageCoTutors({ course }: any) {
             <Plus /> Add Tutor
           </button>
         </div>
-        {isAddTutor ? <div className="absolute right-20 top-40 z-10"><SearchTutor /></div>: ""}
+        {isAddTutor ? <div className="absolute right-20 top-40 z-10"><SearchTutor courseId={course.id}/></div>: ""}
       </div>
 
       <div>

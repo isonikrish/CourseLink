@@ -2,17 +2,18 @@ import axios from "axios";
 import { Search, Send } from "lucide-react";
 import { useState } from "react";
 import { User } from "../utils/types";
+import { BACKEND_URL } from "../utils/backend_url";
+import toast from "react-hot-toast";
 
-function SearchTutor() {
+function SearchTutor({courseId}: any) {
   const [tutors, setTutors] = useState([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsloading] = useState(false);
-
   const searchTutor = async () => {
     try {
       setIsloading(true);
       const response = await axios.get(
-        `http://localhost:8787/api/v1/course/get-tutor?email=${query}`,
+        `${BACKEND_URL}/course/get-tutor?email=${query}`,
         { withCredentials: true }
       );
       if (response.status === 200) {
@@ -25,6 +26,21 @@ function SearchTutor() {
       setTutors([]);
     } finally {
       setIsloading(false);
+    }
+  };
+
+  const sendRequest = async (id: Number | null, courseId: Number | null) => {
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/user/send-request/${id}`,
+        {courseId},
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        toast.success("Sent Request");
+      }
+    } catch (error) {
+      toast.error("Error in sending request");
     }
   };
 
@@ -68,7 +84,10 @@ function SearchTutor() {
                     {tutor?.firstName} {tutor?.lastName}
                   </h4>
                   <p className="text-gray-400">{tutor?.email}</p>
-                  <button className="btn flex items-center gap-2">
+                  <button
+                    className="btn flex items-center gap-2"
+                    onClick={() => sendRequest(tutor?.id,courseId )}
+                  >
                     <Send className="w-4 h-4" />
                     Send Request
                   </button>
