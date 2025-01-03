@@ -39,7 +39,6 @@ model CoTutor {
   id          Int          @id @default(autoincrement())
   courseId    Int
   course      Course       @relation(fields: [courseId], references: [id])
-  access      String[]
   tutorId     Int
   tutor       User         @relation(fields: [tutorId], references: [id])
   permissions Permission[]
@@ -74,4 +73,5 @@ enum Permission {
 
 enum Notification {
   request
+  accepted
 }

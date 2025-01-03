@@ -20,6 +20,7 @@ function Profile() {
         console.log(error);
       }
     },
+    staleTime: 120000,
   });
 
   return (

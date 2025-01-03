@@ -184,17 +184,76 @@ export const handleGetNotifications = async (c: Context) => {
     const notifications = await prisma.notifications.findMany({
       where: { toId: user.id },
       include: {
-        course:true,
-        fromUser:true
-
-      }
+        course: true,
+        fromUser: true,
+      },
     });
     if (notifications.length === 0) {
-      return c.json([],200);
+      return c.json([], 200);
     }
 
     return c.json(notifications, 200);
   } catch (error) {
     return c.json({ msg: "Internal server error." }, 500);
+  }
+};
+
+export const handleAcceptRequest = async (c: Context) => {
+  const prisma = prismaClient(c);
+
+  try {
+    
+    const { courseId, tutorId, notificationId, senderId } = await c.req.json();
+
+    if (!courseId || !tutorId || !notificationId || !senderId) {
+      return c.json({ msg: "Invalid request payload." }, 400);
+    }
+
+    const parsedCourseId = parseInt(courseId, 10);
+    const parsedTutorId = parseInt(tutorId, 10);
+    const parsedNotificationId = parseInt(notificationId, 10);
+    const parsedSenderId = parseInt(senderId, 10);
+
+    if (
+      isNaN(parsedCourseId) ||
+      isNaN(parsedTutorId) ||
+      isNaN(parsedNotificationId) ||
+      isNaN(parsedSenderId)
+    ) {
+      return c.json({ msg: "Invalid data types in request payload." }, 400);
+    }
+
+    const defaultPermission = "edit";
+
+    // Perform database operations in a transaction
+    const result = await prisma.$transaction(async (tx:any) => {
+      const newCoTutor = await tx.coTutor.create({
+        data: {
+          tutorId: parsedTutorId,
+          courseId: parsedCourseId,
+          permissions: [defaultPermission],
+        },
+      });
+
+      await tx.notifications.delete({
+        where: { id: parsedNotificationId },
+      });
+
+      await tx.notifications.create({
+        data: {
+          fromId: parsedTutorId,
+          courseId: parsedCourseId,
+          toId: parsedSenderId,
+          notification: "accepted",
+        },
+      });
+
+      return newCoTutor;
+    });
+
+    return c.json({ msg: "Accepted the request", coTutor: result }, 200);
+  } catch (error) {
+    console.error("Error handling accept request:", error);
+    return c.json({ msg: "Internal server error."}, 500);
   }
 };
