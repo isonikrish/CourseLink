@@ -11,12 +11,12 @@ userRoutes.get("/getMe", protectRoute,handleGetMe)
 userRoutes.post("/logout", protectRoute, handleLogout);
 userRoutes.get("/get-notifications",protectRoute, handleGetNotifications)
 userRoutes.post("/accept-request", protectRoute, isTutor, handleAcceptRequest)
-
+userRoutes.post("/send-request/:id", protectRoute, isTutor, handleSendRequest);
 
 userRoutes.get("/:id", handleGetUser);//dynamic route
 
 
-userRoutes.post("/send-request/:id", protectRoute, isTutor, handleSendRequest);
+
 
 
 

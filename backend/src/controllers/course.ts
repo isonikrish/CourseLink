@@ -59,7 +59,14 @@ export const handleGetCourseWithId = async (c: Context) => {
     const course = await prisma.course.findUnique({
       where: { id: id },
       include: {
-        tutor: true, //TODO - add more select here
+        tutor: true,
+        coTutors: {
+          select: {
+            tutor: true,
+            permissions: true,
+            id: true,
+          },
+        },
       },
     });
     if (!course) {
@@ -111,7 +118,7 @@ export const handleUpdateCourse = async (c: Context) => {
 };
 
 export const handleGetTutor = async (c: Context) => {
-  const user = c.get("user")
+  const user = c.get("user");
   try {
     const email = c.req.query("email");
     if (!email) {
@@ -132,10 +139,31 @@ export const handleGetTutor = async (c: Context) => {
       return c.json({ msg: "No relevant tutors found" }, 404);
     }
 
-    tutors = tutors.filter((tutor:any) => tutor.id !== user.id);
-
+    tutors = tutors.filter((tutor: any) => tutor.id !== user.id);
 
     return c.json(tutors, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+};
+
+export const handleChangePermissions = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const user = c.get("user");
+
+  const { id, permissions } = await c.req.json();
+  const parsedId = parseInt(id)
+  if (isNaN(parsedId)) {
+    return c.json({ msg: "Invalid ID" }, 400);
+  }
+  try {
+    const updateCotutorPermission = await prisma.coTutor.update({
+      where: { id: parsedId },
+      data: {
+        permissions: permissions, // Update permissions in the database
+      },
+    });
+    return c.json({msg: "Updated permissions"}, 200)
   } catch (error) {
     return c.json({ msg: "Internal Server Error" }, 500);
   }

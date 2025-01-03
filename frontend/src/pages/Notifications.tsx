@@ -2,10 +2,12 @@ import axios from "axios";
 import { BACKEND_URL } from "../utils/backend_url";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useAuth } from "../stores/useAuth";
 
 function Notifications() {
+  const {user} = useAuth()
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["notifications"],
+    queryKey: ["notifications", user?.id],
     queryFn: async () => {
       try {
         const response = await axios.get(
@@ -117,7 +119,7 @@ function Notifications() {
                   .
                 </div>
               </div>
-              {notification?.type === "request" && (
+              {notification?.notification === "request" && (
                 <div className="flex gap-2 self-center">
                   <button
                     className="btn"
