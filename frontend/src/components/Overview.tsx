@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 
-function Overview() {
+function Overview({course}:any) {
   const { id } = useParams();
   
-  const status = "unpublished";
+  const status = course?.status;
 
   return (
     <div>

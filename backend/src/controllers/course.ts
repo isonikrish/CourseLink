@@ -40,9 +40,16 @@ export const handleGetMyCourses = async (c: Context) => {
   const user = c.get("user");
   try {
     const courses = await prisma.course.findMany({
-      where: { tutorId: user.id },
+      where: {
+        OR: [
+          { tutorId: user.id },
+          { coTutors: { some: { tutorId: user.id } } },
+        ],
+      },
+      include: {
+        coTutors: true, // Include co-tutors in the result if needed
+      },
     });
-
     if (courses.length === 0) {
       return c.json({ msg: "No courses found" }, 404);
     }

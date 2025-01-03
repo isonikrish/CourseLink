@@ -6,34 +6,56 @@ import { useCourse } from "../stores/useCourse";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../stores/useAuth";
 import ManageCoTutors from "../components/ManageCoTutors";
+import NoAccess from "../components/NoAccess";
 
 function EditCourse() {
   const [menu, setMenu] = useState("overview");
   const { id } = useParams();
-  const {user} = useAuth()
-  const [course, setCourse] = useState(null);
+  const { user } = useAuth();
+  const [course, setCourse] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const { fetchCourse } = useCourse();
+
   useEffect(() => {
     async function handleFetchCourse() {
       if (id) {
         const courseId = parseInt(id);
         if (!isNaN(courseId)) {
           const response = await fetchCourse(courseId);
-          //@ts-ignore
           setCourse(response);
+          setLoading(false);
         }
       }
     }
 
-    handleFetchCourse()
+    handleFetchCourse();
   }, [id, user]);
+
+  const hasEditPermission: any = course?.coTutors?.some(
+    (coTutor: any) =>
+      coTutor.tutor.id === user?.id && coTutor.permissions.includes("edit")
+  );
+
+  const isMainTutor: any = course?.tutorId === user?.id;
+  const hasManagePermission: any = course?.tutorId === user?.id;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="flex w-full">
-      <Sidebar setMenu={setMenu} />
+      <Sidebar setMenu={setMenu} menu={menu} />
       <div className="pt-16 w-full">
-        {menu === "overview" && <Overview />}
-        {menu === "edit" && <EditPage course={course}/>}
-        {menu === "manage" && <ManageCoTutors course={course} />}
+        {menu === "overview" && <Overview course={course}/>}
+        {menu === "edit" && (isMainTutor || hasEditPermission) ? (
+          <EditPage course={course} />
+        ) : (
+          menu === "edit" && <NoAccess setMenu={setMenu} />
+        )}
+        {menu === "manage" && hasManagePermission ? (
+          <ManageCoTutors course={course} />
+        ) : (
+          menu === "manage" && <NoAccess setMenu={setMenu} />
+        )}
       </div>
     </div>
   );
