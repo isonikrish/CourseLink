@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../stores/useAuth";
 
 function Notifications() {
-  const {user} = useAuth()
+  const { user } = useAuth();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notifications", user?.id],
     queryFn: async () => {
@@ -89,7 +89,7 @@ function Notifications() {
         ) : (
           data.map((notification: any) => (
             <div
-              key={notification.id} // Use a unique key
+              key={notification.id}
               className="flex items-start space-x-4 p-4 rounded-lg border border-base-300"
             >
               <div className="flex-shrink-0">
@@ -110,13 +110,35 @@ function Notifications() {
                   </div>
                 </div>
                 <div className="text-sm mt-2">
-                  {notification?.notification === "request"
-                    ? `${notification?.fromUser?.firstName} ${notification?.fromUser?.lastName} has requested to collaborate with you as a co-tutor for the course titled `
-                    : `${notification?.fromUser?.firstName} ${notification?.fromUser?.lastName} has accepted your collaboration request for the course titled `}
-                  <span className="text-blue-400 font-semibold italic hover:text-blue-500 hover:underline cursor-pointer">
-                    '{notification?.course?.title}'
-                  </span>
-                  .
+                  {notification?.notification === "request" && (
+                    <>
+                      {`${notification?.fromUser?.firstName} ${notification?.fromUser?.lastName} has requested to collaborate with you as a co-tutor for the course titled `}
+                      <span className="text-blue-400 font-semibold italic hover:text-blue-500 hover:underline cursor-pointer">
+                        '{notification?.course?.title}'
+                      </span>
+                      .
+                    </>
+                  )}
+
+                  {notification?.notification === "accepted" && (
+                    <>
+                      {`${notification?.fromUser?.firstName} ${notification?.fromUser?.lastName} has accepted your collaboration request for the course titled `}
+                      <span className="text-blue-400 font-semibold italic hover:text-blue-500 hover:underline cursor-pointer">
+                        '{notification?.course?.title}'
+                      </span>
+                      .
+                    </>
+                  )}
+
+                  {notification?.notification === "delete_lecture" && (
+                    <>
+                      {`${notification?.fromUser?.firstName} ${notification?.fromUser?.lastName} has removed your lecture from the course titled `}
+                      <span className="text-blue-400 font-semibold italic hover:text-blue-500 hover:underline cursor-pointer">
+                        '{notification?.course?.title}'
+                      </span>
+                      .
+                    </>
+                  )}
                 </div>
               </div>
               {notification?.notification === "request" && (
@@ -134,9 +156,7 @@ function Notifications() {
                   >
                     Accept
                   </button>
-                  <button className="btn btn-outline btn-error">
-                    Decline
-                  </button>
+                  <button className="btn btn-outline btn-error">Decline</button>
                 </div>
               )}
             </div>

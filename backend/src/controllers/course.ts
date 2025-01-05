@@ -75,6 +75,17 @@ export const handleGetCourseWithId = async (c: Context) => {
             id: true,
           },
         },
+        Lecture:{
+          select: {
+            tutorId: true,
+            courseId: true,
+            course: true,
+            tutor: true,
+            title: true,
+            id
+
+          }
+        }
       },
     });
     if (!course) {

@@ -1,4 +1,4 @@
-import { Users, Edit, Plus, FileText } from "lucide-react";
+import { Users, Edit, FileText, Library } from "lucide-react";
 import { GrOverview } from "react-icons/gr";
 
 type sidebarProp = {
@@ -43,12 +43,12 @@ const Sidebar = ({ setMenu, menu }: sidebarProp) => {
 
           <div
             className={`flex items-center px-4 py-6 ${
-              menu === "addlecture" ? "bg-base-200" : ""
+              menu === "lectures" ? "bg-base-200" : ""
             } hover:rounded-lg cursor-pointer border-b border-base-300`}
-            onClick={() => setMenu("addlecture")}
+            onClick={() => setMenu("lectures")}
           >
-            <Plus className="w-5 h-5" />
-            <span className="mx-4 font-medium">Add Lecture</span>
+            <Library className="w-5 h-5" />
+            <span className="mx-4 font-medium">Lectures</span>
           </div>
 
           <div

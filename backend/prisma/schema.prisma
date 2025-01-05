@@ -85,4 +85,5 @@ enum Permission {
 enum Notification {
   request
   accepted
+  delete_lecture
 }

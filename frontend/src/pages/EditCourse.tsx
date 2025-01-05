@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../stores/useAuth";
 import ManageCoTutors from "../components/ManageCoTutors";
 import NoAccess from "../components/NoAccess";
-import AddLecture from "../components/AddLecture";
+import Lectures from "../components/Lectures";
 
 function EditCourse() {
   const [menu, setMenu] = useState("overview");
@@ -17,18 +17,17 @@ function EditCourse() {
   const [loading, setLoading] = useState(true);
   const { fetchCourse } = useCourse();
 
-  useEffect(() => {
-    async function handleFetchCourse() {
-      if (id) {
-        const courseId = parseInt(id);
-        if (!isNaN(courseId)) {
-          const response = await fetchCourse(courseId);
-          setCourse(response);
-          setLoading(false);
-        }
+  async function handleFetchCourse() {
+    if (id) {
+      const courseId = parseInt(id);
+      if (!isNaN(courseId)) {
+        const response = await fetchCourse(courseId);
+        setCourse(response);
+        setLoading(false);
       }
     }
-
+  }
+  useEffect(() => {
     handleFetchCourse();
   }, [id, user]);
 
@@ -50,7 +49,7 @@ function EditCourse() {
     <div className="flex w-full">
       <Sidebar setMenu={setMenu} menu={menu} />
       <div className="pt-16 w-full">
-        {menu === "overview" && <Overview course={course}/>}
+        {menu === "overview" && <Overview course={course} />}
         {menu === "edit" && (isMainTutor || hasEditPermission) ? (
           <EditPage course={course} />
         ) : (
@@ -61,11 +60,7 @@ function EditCourse() {
         ) : (
           menu === "manage" && <NoAccess setMenu={setMenu} />
         )}
-        {menu === "addlecture" && (isMainTutor || hasAddPermission) ? (
-          <AddLecture course={course} />
-        ) : (
-          menu === "addlecture" && <NoAccess setMenu={setMenu} />
-        )}
+        {menu === "lectures" && <Lectures course={course} />}
       </div>
     </div>
   );

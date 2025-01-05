@@ -4,12 +4,12 @@ import { isTutor } from "../utils/isTutor";
 import {
   addAuthorize
 } from "../utils/authorizeCoTutor";
-import { handleAddLecture } from "../controllers/lecture";
+import { handleAddLecture, handleRemoveLecture } from "../controllers/lecture";
 
 
 const lectureRoutes= new Hono();
 
 lectureRoutes.post("/add/:id", protectRoute, isTutor,addAuthorize, handleAddLecture );
-
+lectureRoutes.post("/remove/:id",protectRoute, isTutor, handleRemoveLecture);
 
 export default lectureRoutes
