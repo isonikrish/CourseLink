@@ -19,20 +19,22 @@ model User {
   coTutors              CoTutor[]
   sentNotifications     Notifications[] @relation("FromUser")
   receivedNotifications Notifications[] @relation("ToUser")
+  uploadedLectures      Lecture[]
 }
 
 model Course {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String
-  thumbnail   String?   @default("")
-  tutorId     Int
-  tutor       User      @relation(fields: [tutorId], references: [id])
-  price       Int?      @default(0)
-  category    String?
-  status      Status?   @default(unpublished)
-  coTutors    CoTutor[]
+  id           Int             @id @default(autoincrement())
+  title        String
+  description  String          @db.Text
+  thumbnail    String?         @default("")
+  tutorId      Int
+  tutor        User            @relation(fields: [tutorId], references: [id])
+  price        Int?            @default(0)
+  category     String?
+  status       Status?         @default(unpublished)
+  coTutors     CoTutor[]
   sentRequests Notifications[]
+  Lecture      Lecture[]
 }
 
 model CoTutor {
@@ -51,8 +53,17 @@ model Notifications {
   toId         Int
   toUser       User         @relation("ToUser", fields: [toId], references: [id])
   notification Notification
+  courseId     Int
+  course       Course       @relation(fields: [courseId], references: [id])
+}
+
+model Lecture {
+  id       Int    @id @default(autoincrement())
+  tutorId  Int
   courseId Int
-  course Course @relation(fields: [courseId], references: [id])
+  title    String
+  course   Course @relation(fields: [courseId], references: [id])
+  tutor    User   @relation(fields: [tutorId], references: [id])
 }
 
 enum Role {

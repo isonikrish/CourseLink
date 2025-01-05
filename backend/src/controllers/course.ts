@@ -1,6 +1,7 @@
 import { Context } from "hono";
 import { prismaClient } from "../utils/prismaClient";
 import { createCourseSchema, editCourse } from "../utils/zodSchemas";
+import sanitizeHtml from "sanitize-html";
 
 export const handleCreateCourse = async (c: Context) => {
   const prisma = prismaClient(c);
@@ -89,6 +90,7 @@ export const handleGetCourseWithId = async (c: Context) => {
 export const handleUpdateCourse = async (c: Context) => {
   const prisma = prismaClient(c);
   const id = c.req.param("id");
+
   const data = await c.req.json();
   const courseId = parseInt(id, 10);
   if (isNaN(courseId)) {
@@ -97,6 +99,7 @@ export const handleUpdateCourse = async (c: Context) => {
 
   try {
     const validatedData = editCourse.safeParse(data);
+
     if (!validatedData.success) {
       return c.json(
         {
@@ -107,7 +110,10 @@ export const handleUpdateCourse = async (c: Context) => {
       );
     }
 
-    const { title, description, price, category } = validatedData.data;
+    let { title, description, price, category }: any = validatedData.data;
+
+    description = sanitizeHtml(description);
+
     const updatedCourse = await prisma.course.update({
       where: { id: courseId },
       data: {
@@ -117,10 +123,11 @@ export const handleUpdateCourse = async (c: Context) => {
         category,
       },
     });
-    return c.json(updatedCourse, 200);
+
+    return c.json({ msg: "Course updated" }, 200);
   } catch (error) {
+    console.log("Error in updating course:", error);
     return c.json({ msg: "Internal Server Error" }, 500);
-    console.log(error);
   }
 };
 
@@ -159,7 +166,7 @@ export const handleChangePermissions = async (c: Context) => {
   const user = c.get("user");
 
   const { id, permissions } = await c.req.json();
-  const parsedId = parseInt(id)
+  const parsedId = parseInt(id);
   if (isNaN(parsedId)) {
     return c.json({ msg: "Invalid ID" }, 400);
   }
@@ -170,7 +177,7 @@ export const handleChangePermissions = async (c: Context) => {
         permissions: permissions, // Update permissions in the database
       },
     });
-    return c.json({msg: "Updated permissions"}, 200)
+    return c.json({ msg: "Updated permissions" }, 200);
   } catch (error) {
     return c.json({ msg: "Internal Server Error" }, 500);
   }

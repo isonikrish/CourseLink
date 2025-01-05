@@ -20,7 +20,7 @@ function Navbar() {
 
   return (
     <nav className="navbar px-10 py-0 fixed top-0 left-1/2 transform -translate-x-1/2 w-full z-10 flex items-center justify-between bg-base-100 border-b border-base-300 transition duration-300 ease-in-out">
-      <Link to={"/"}>
+      <Link to={"/home"}>
         <Logo />
       </Link>
 

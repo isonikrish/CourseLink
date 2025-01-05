@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../stores/useAuth";
 import ManageCoTutors from "../components/ManageCoTutors";
 import NoAccess from "../components/NoAccess";
+import AddLecture from "../components/AddLecture";
 
 function EditCourse() {
   const [menu, setMenu] = useState("overview");
@@ -35,6 +36,10 @@ function EditCourse() {
     (coTutor: any) =>
       coTutor.tutor.id === user?.id && coTutor.permissions.includes("edit")
   );
+  const hasAddPermission: any = course?.coTutors?.some(
+    (coTutor: any) =>
+      coTutor.tutor.id === user?.id && coTutor.permissions.includes("add")
+  );
 
   const isMainTutor: any = course?.tutorId === user?.id;
   const hasManagePermission: any = course?.tutorId === user?.id;
@@ -55,6 +60,11 @@ function EditCourse() {
           <ManageCoTutors course={course} />
         ) : (
           menu === "manage" && <NoAccess setMenu={setMenu} />
+        )}
+        {menu === "addlecture" && (isMainTutor || hasAddPermission) ? (
+          <AddLecture course={course} />
+        ) : (
+          menu === "addlecture" && <NoAccess setMenu={setMenu} />
         )}
       </div>
     </div>

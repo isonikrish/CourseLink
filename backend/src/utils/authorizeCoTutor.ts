@@ -22,7 +22,6 @@ export const editAuthorize = async (
       return c.json({ msg: "Unauthorized" }, 403);
     }
 
-    console.log("User is authorized to edit the course.");
     await next();
   } catch (error) {
     console.error("Authorization error:", error);
@@ -43,15 +42,14 @@ export const addAuthorize = async (
       where: { id: courseId, tutorId: user.id },
     });
 
-    // Check if the user is a co-tutor with edit permissions
-    const isCoTutorWithEdit = await prisma.coTutor.findFirst({
+    // Check if the user is a co-tutor with add permissions
+    const isCoTutorWithAdd = await prisma.coTutor.findFirst({
       where: { tutorId: user.id, courseId, permissions: { has: "add" } },
     });
-    if (!isTutor && !isCoTutorWithEdit) {
+    if (!isTutor && !isCoTutorWithAdd) {
       return c.json({ msg: "Unauthorized" }, 403);
     }
 
-    console.log("User is authorized to edit the course.");
     await next();
   } catch (error) {
     console.error("Authorization error:", error);

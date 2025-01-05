@@ -11,7 +11,6 @@ import {
 import { isTutor } from "../utils/isTutor";
 import {
   editAuthorize,
-  addAuthorize,
   statusAuthorize,
 } from "../utils/authorizeCoTutor";
 

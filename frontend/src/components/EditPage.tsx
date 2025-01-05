@@ -2,6 +2,8 @@ import { BookOpenCheck, Camera, Trash2, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { useCourse } from "../stores/useCourse";
 import { useParams } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 function EditPage({ course }: any) {
   const { id } = useParams();
@@ -17,35 +19,23 @@ function EditPage({ course }: any) {
     price: course?.price || 0,
     thumbnail: course?.thumbnail || "https://via.placeholder.com/150",
   });
-  
+
   const { editCourse } = useCourse();
+
   const handleThumbnailChange = (e: any) => {
-    if (e.target.name === "thumbnail") {
-      const file = e.target.files[0];
-      if (file) {
-        setFormData({ ...formData, thumbnail: file });
-        setPreviewThumbnail(URL.createObjectURL(file));
-      }
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData({ ...formData, thumbnail: file });
+      setPreviewThumbnail(URL.createObjectURL(file));
     }
   };
-  const handleCameraClick = () => {
-    fileInputRef.current?.click();
-  };
-  const clearThumbnail = () => {
-    setFormData({ ...formData, thumbnail: "" });
-    setPreviewThumbnail(course?.thumbnail || "https://via.placeholder.com/150");
-  };
 
-  async function saveChanges() {
+  const saveChanges = async () => {
     setIsLoading(true);
-
-    if (id) {
-      const parsedId = parseInt(id);
-      await editCourse(parsedId, formData);
-    }
-
+    console.log(formData.description)
+    if (id) await editCourse(parseInt(id), formData);
     setIsLoading(false);
-  }
+  };
 
   return (
     <div className="px-10 py-5">
@@ -62,25 +52,25 @@ function EditPage({ course }: any) {
       </div>
 
       <div className="mt-10">
-        <div className="form-control w-full mb-5">
-          <div className="label mb-2">
-            <span className="label-text font-semibold">Thumbnail</span>
-          </div>
+        <div className="form-control mb-5">
+          <span className="label-text font-semibold mb-2">Thumbnail</span>
           <div className="relative">
             {previewThumbnail && (
               <figure>
                 <img
                   src={previewThumbnail}
-                  alt="Placeholder"
+                  alt="Thumbnail"
                   className="h-72 w-1/2 object-cover"
                 />
-
-                <div className="absolute top-0 left-0 w-1/2 h-full bg-black bg-opacity-60"></div>
-                <div className="text-2xl">
+                <div className="absolute top-0 left-0 w-1/2 h-full bg-black bg-opacity-60">
                   <X
                     size={32}
-                    className="absolute z-10 top-2 left-2 transform cursor-pointer bg-base-200 rounded-full p-2 flex items-center justify-center"
-                    onClick={() => clearThumbnail()}
+                    className="absolute top-2 left-2 cursor-pointer bg-base-200 rounded-full p-2"
+                    onClick={() =>
+                      setPreviewThumbnail(
+                        course?.thumbnail || "https://via.placeholder.com/150"
+                      )
+                    }
                   />
                 </div>
               </figure>
@@ -88,29 +78,27 @@ function EditPage({ course }: any) {
             <input
               type="file"
               name="thumbnail"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hidden"
+              className="hidden"
               onChange={handleThumbnailChange}
               accept="image/*"
-              id="thumbnailInput"
               ref={fileInputRef}
             />
             <Camera
               className="absolute top-1/2 left-80 cursor-pointer text-base-300"
               size={30}
-              onClick={handleCameraClick}
+              onClick={() => fileInputRef.current?.click()}
             />
           </div>
         </div>
-        <div className="form-control w-full mb-5">
-          <div className="label mb-2">
-            <span className="label-text font-semibold">Title</span>
-          </div>
+
+        <div className="form-control mb-5">
+          <span className="label-text font-semibold mb-2">Title</span>
           <input
             type="text"
             placeholder="Course Title"
-            className="input input-bordered w-full py-3 px-4 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+            className="input input-bordered w-full"
             value={formData.title}
-            onChange={(e: any) =>
+            onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
           />
@@ -119,25 +107,20 @@ function EditPage({ course }: any) {
           </p>
         </div>
 
-        <div className="form-control w-full mb-5">
-          <div className="label mb-2">
-            <span className="label-text font-semibold">Description</span>
-          </div>
-          <textarea
-            className="textarea textarea-bordered w-full py-3 px-4 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
-            placeholder="Write a detailed description for the course"
+        <div className="form-control mb-5">
+          <span className="label-text font-semibold mb-2">Description</span>
+          <ReactQuill
             value={formData.description}
-            onChange={(e: any) =>
-              setFormData({ ...formData, description: e.target.value })
+            onChange={(content) =>
+              setFormData({ ...formData, description: content })
             }
-          ></textarea>
+            placeholder="Write a detailed description"
+          />
         </div>
 
-        <div className="flex justify-between gap-6">
+        <div className="flex gap-6">
           <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text font-semibold">Category</span>
-            </label>
+            <span className="label-text font-semibold">Category</span>
             <select
               className="select select-bordered w-full"
               value={formData.category}
@@ -145,7 +128,7 @@ function EditPage({ course }: any) {
                 setFormData({ ...formData, category: e.target.value })
               }
             >
-              <option disabled value={""}>
+              <option disabled value="">
                 Select Category
               </option>
               <option>Technology & Programming</option>
@@ -156,36 +139,26 @@ function EditPage({ course }: any) {
               <option>Other</option>
             </select>
           </div>
-
           <div className="form-control w-full max-w-xs">
-            <label className="label">
-              <span className="label-text font-semibold">Price (INR)</span>
-            </label>
+            <span className="label-text font-semibold">Price (INR)</span>
             <input
               type="number"
               min={0}
               placeholder="Enter price"
               className="input input-bordered w-full"
-              onInput={(e: any) => {
-                if (e.target.value < 0) {
-                  e.target.value = 0;
-                }
-              }}
               value={formData.price}
-              onChange={(e) => {
-                const value = e.target.value;
-                const numericValue = parseInt(value, 10);
-
+              onChange={(e) =>
                 setFormData({
                   ...formData,
-                  price: isNaN(numericValue) ? 0 : numericValue,
-                });
-              }}
+                  price: Math.max(0, parseInt(e.target.value, 10) || 0),
+                })
+              }
             />
           </div>
         </div>
       </div>
-      <button className="btn mt-10 rounded-md" onClick={() => saveChanges()}>
+
+      <button className="btn mt-10 rounded-md" onClick={saveChanges}>
         {isLoading ? (
           <span className="loading loading-dots loading-md"></span>
         ) : (
