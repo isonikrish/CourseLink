@@ -3,6 +3,7 @@ import { setCookie } from "hono/cookie";
 import { sign } from "hono/jwt";
 
 export const generateTokenAndSetCookie = async (payload: any, c: Context) => {
+  const isProduction = false;
   try {
     const jwt = await sign(
       {
@@ -12,11 +13,12 @@ export const generateTokenAndSetCookie = async (payload: any, c: Context) => {
     );
     setCookie(c, "token", jwt, {
       httpOnly: true,
-      secure: true,
+      secure: true, 
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
-      sameSite: "Lax",
+      sameSite: isProduction ? "None" : "Lax", 
     });
+
   } catch (error) {
     console.error(error);
   }

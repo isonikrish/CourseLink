@@ -64,6 +64,7 @@ model Lecture {
   title    String
   course   Course @relation(fields: [courseId], references: [id])
   tutor    User   @relation(fields: [tutorId], references: [id])
+  video String
 }
 
 enum Role {

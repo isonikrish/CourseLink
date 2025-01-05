@@ -36,22 +36,31 @@ function Lectures({ course }: any) {
         <h1 className="text-3xl font-bold">Lectures</h1>
 
         <div className="flex gap-3">
-          <button
+          <div
             className="btn flex items-center gap-2 border border-base-300"
             onClick={() => openModal()}
           >
             <Plus />
             Add Lecture
-          </button>
+          </div>
 
           <dialog id="my_modal_1" className="modal">
             <div className="modal-box border border-base-300 rounded-lg relative">
-              <form method="dialog">
-                <button className="btn btn-md btn-circle absolute top-2 right-2">
-                  <X />
-                </button>
-                <AddLecture />
-              </form>
+
+              <button
+                className="btn btn-md btn-circle absolute top-2 right-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const modal = document.getElementById(
+                    "my_modal_1"
+                  ) as HTMLDialogElement;
+                  modal?.close();
+                }}
+              >
+                <X />
+              </button>
+
+              <AddLecture course={course} />
             </div>
           </dialog>
         </div>
@@ -89,7 +98,10 @@ function Lectures({ course }: any) {
                       <Eye className="w-4 h-4" />
                       Preview
                     </button>
-                    <button className="btn rounded-lg text-red-600 flex items-center gap-2" onClick={()=>removeLecture(lecture?.id)}>
+                    <button
+                      className="btn rounded-lg text-red-600 flex items-center gap-2"
+                      onClick={() => removeLecture(lecture?.id)}
+                    >
                       <Trash /> Remove
                     </button>
                   </div>

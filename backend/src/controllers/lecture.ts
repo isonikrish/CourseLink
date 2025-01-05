@@ -9,16 +9,27 @@ export const handleAddLecture = async (c: Context) => {
     return c.json({ msg: "Invalid or missing course ID" }, 400);
   }
   try {
-    const { title } = await c.req.json();
-    if (!title) {
-      return c.json({ msg: "No title provided" }, 400);
+    const body = await c.req.parseBody();
+    const title = body["title"];
+    const file = body["video"];
+    if (!title || !(file instanceof File)) {
+      return c.json({ msg: "Title or file is missing" }, 400);
     }
+    const bucket = c.env.HONO_R2_UPLOAD;
+    const fileKey = `lectures/${courseId}-${Date.now()}-${file.name}`;
+    const uploadResult = await bucket.put(fileKey, file);
+    if (!uploadResult) {
+      return c.json({ msg: "Failed to upload file to R2" }, 500);
+    }
+
+    const fileUrl = `${c.env.bucket_url}/${fileKey}`;
 
     const newLecture = await prisma.lecture.create({
       data: {
         courseId: courseId,
         tutorId: user.id,
         title: title,
+        video: fileUrl
       },
     });
 
@@ -49,6 +60,17 @@ export const handleRemoveLecture = async (c: Context) => {
     return c.json({ msg: "Invalid tutorId or courseId in request body" }, 400);
   }
   try {
+    const lecture = await prisma.lecture.findUnique({
+      where: { id: lectureId },
+    });
+    const bucket = c.env.HONO_R2_UPLOAD;
+    const fileUrl = lecture.video;
+    const bucketUrl = c.env.bucket_url;
+
+    if (fileUrl.startsWith(bucketUrl)) {
+      const fileKey = fileUrl.replace(`${bucketUrl}/`, ""); 
+      const deleteResult = await bucket.delete(fileKey);
+    }
     const removedLecture = await prisma.lecture.delete({
       where: { id: lectureId },
     });
