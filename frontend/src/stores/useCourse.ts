@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 type Store = {
   createCourse: (data: courseFromData) => any;
   fetchCourse: (id: Number) => Promise<course> | null;
-  editCourse: (id:Number , data: editCourse) => void;
+  editCourse: (id:Number , data: any) => void;
 };
 export const useCourse = create<Store>((set) => ({
   createCourse: async (data: courseFromData) => {
@@ -24,7 +24,12 @@ export const useCourse = create<Store>((set) => ({
   },
   editCourse: async (id: Number, data: editCourse) => {
     try {
-      const response = await axios.put(`${BACKEND_URL}/course/update-course/${id}`, data,{withCredentials: true});
+      const response = await axios.put(`${BACKEND_URL}/course/update-course/${id}`, data, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response.status === 200) {
         toast.success("Course Updated");
       }

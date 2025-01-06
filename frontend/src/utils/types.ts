@@ -27,6 +27,7 @@ export type course = {
   id: Number,
   tutorId: Number,
   tutor: User
+  thumbnail: any
 } & courseFromData
 
 export type editCourse = {

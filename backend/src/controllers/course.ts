@@ -1,6 +1,6 @@
 import { Context } from "hono";
 import { prismaClient } from "../utils/prismaClient";
-import { createCourseSchema, editCourse } from "../utils/zodSchemas";
+import { createCourseSchema } from "../utils/zodSchemas";
 import sanitizeHtml from "sanitize-html";
 
 export const handleCreateCourse = async (c: Context) => {
@@ -75,17 +75,17 @@ export const handleGetCourseWithId = async (c: Context) => {
             id: true,
           },
         },
-        Lecture:{
+        Lecture: {
           select: {
             tutorId: true,
             courseId: true,
             course: true,
             tutor: true,
             title: true,
-            id
-
-          }
-        }
+            id: true,
+            video: true,
+          },
+        },
       },
     });
     if (!course) {
@@ -102,38 +102,70 @@ export const handleUpdateCourse = async (c: Context) => {
   const prisma = prismaClient(c);
   const id = c.req.param("id");
 
-  const data = await c.req.json();
+  const formData = await c.req.parseBody();
   const courseId = parseInt(id, 10);
   if (isNaN(courseId)) {
     return c.json({ msg: "Invalid course ID" }, 400);
   }
 
   try {
-    const validatedData = editCourse.safeParse(data);
-
-    if (!validatedData.success) {
-      return c.json(
-        {
-          msg: "Invalid inputs",
-          errors: validatedData.error.errors,
-        },
-        400
-      );
-    }
-
-    let { title, description, price, category }: any = validatedData.data;
+    let { title, description, price, category, thumbnail }: any = formData;
 
     description = sanitizeHtml(description);
 
-    const updatedCourse = await prisma.course.update({
+    const currentCourse = await prisma.course.findUnique({
       where: { id: courseId },
-      data: {
-        title,
-        description,
-        price,
-        category,
-      },
+      select: { thumbnail: true },
     });
+
+  
+    if (thumbnail && thumbnail.size > 0) {
+      const oldFileUrl = currentCourse?.thumbnail;
+
+      if (oldFileUrl) {
+        const bucketUrl = c.env.bucket_url;
+        const oldFileKey = oldFileUrl.replace(`${bucketUrl}/`, "").split('?')[0]; 
+        if (oldFileKey) {
+          const bucket = c.env.HONO_R2_UPLOAD;
+          try {
+            await bucket.delete(oldFileKey);
+
+          } catch (deleteError) {
+            return c.json({ msg: "Failed to delete old file from R2" }, 500);
+          }
+        }
+      }
+
+
+      const bucket = c.env.HONO_R2_UPLOAD;
+      const fileKey = `thumbnail/${courseId}-${Date.now()}-${thumbnail.name}`;
+      const uploadResult = await bucket.put(fileKey, thumbnail);
+      if (!uploadResult) {
+        return c.json({ msg: "Failed to upload file to R2" }, 500);
+      }
+
+      const fileUrl = `${c.env.bucket_url}/${fileKey}`;
+      await prisma.course.update({
+        where: { id: courseId },
+        data: {
+          title,
+          description,
+          price: parseInt(price),
+          category,
+          thumbnail: fileUrl, 
+        },
+      });
+    } else {
+      await prisma.course.update({
+        where: { id: courseId },
+        data: {
+          title,
+          description,
+          price: parseInt(price),
+          category,
+        },
+      });
+    }
 
     return c.json({ msg: "Course updated" }, 200);
   } catch (error) {
@@ -141,6 +173,7 @@ export const handleUpdateCourse = async (c: Context) => {
     return c.json({ msg: "Internal Server Error" }, 500);
   }
 };
+
 
 export const handleGetTutor = async (c: Context) => {
   const user = c.get("user");

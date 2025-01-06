@@ -1,4 +1,4 @@
-import { BookOpenCheck, Camera, Trash2, X } from "lucide-react";
+import { BookOpenCheck, Trash2, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { useCourse } from "../stores/useCourse";
 import { useParams } from "react-router-dom";
@@ -10,19 +10,20 @@ function EditPage({ course }: any) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [previewThumbnail, setPreviewThumbnail] = useState(
-    course?.thumbnail || "https://via.placeholder.com/150"
+    course?.thumbnail || "https://via.placeholder.com/350x200"
   );
+
   const [formData, setFormData] = useState({
     title: course?.title || "",
     description: course?.description || "",
     category: course?.category || "",
     price: course?.price || 0,
-    thumbnail: course?.thumbnail || "https://via.placeholder.com/150",
+    thumbnail: course?.thumbnail || "",
   });
 
   const { editCourse } = useCourse();
 
-  const handleThumbnailChange = (e: any) => {
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setFormData({ ...formData, thumbnail: file });
@@ -30,11 +31,32 @@ function EditPage({ course }: any) {
     }
   };
 
+  const clearThumbnail = () => {
+    setFormData({ ...formData, thumbnail: "" });
+    setPreviewThumbnail("https://via.placeholder.com/350x200");
+  };
+
   const saveChanges = async () => {
     setIsLoading(true);
-    console.log(formData.description)
-    if (id) await editCourse(parseInt(id), formData);
-    setIsLoading(false);
+
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("description", formData.description);
+    data.append("category", formData.category);
+    data.append("price", formData.price);
+
+
+    if (formData.thumbnail instanceof File) {
+      data.append("thumbnail", formData.thumbnail);
+    }
+
+    try {
+      if (id) await editCourse(parseInt(id), data);
+    } catch (error) {
+      console.error("Failed to save changes:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -54,39 +76,31 @@ function EditPage({ course }: any) {
       <div className="mt-10">
         <div className="form-control mb-5">
           <span className="label-text font-semibold mb-2">Thumbnail</span>
-          <div className="relative">
-            {previewThumbnail && (
-              <figure>
-                <img
-                  src={previewThumbnail}
-                  alt="Thumbnail"
-                  className="h-72 w-1/2 object-cover"
-                />
-                <div className="absolute top-0 left-0 w-1/2 h-full bg-black bg-opacity-60">
-                  <X
-                    size={32}
-                    className="absolute top-2 left-2 cursor-pointer bg-base-200 rounded-full p-2"
-                    onClick={() =>
-                      setPreviewThumbnail(
-                        course?.thumbnail || "https://via.placeholder.com/150"
-                      )
-                    }
-                  />
-                </div>
-              </figure>
+
+          <div className="relative max-w-sm">
+            <img
+              src={previewThumbnail}
+              alt="Thumbnail Preview"
+              className="rounded-lg shadow-lg w-full"
+            />
+            {previewThumbnail !== "https://via.placeholder.com/350x200" && (
+              <button
+                onClick={clearThumbnail}
+                className="absolute top-2 right-2 rounded-full p-2 shadow-md bg-black text-white"
+                aria-label="Clear Thumbnail"
+              >
+                <X size={16} />
+              </button>
             )}
+          </div>
+
+          <div className="mt-4">
             <input
               type="file"
-              name="thumbnail"
-              className="hidden"
-              onChange={handleThumbnailChange}
+              className="file-input w-full max-w-xs border border-base-300 rounded-lg"
               accept="image/*"
               ref={fileInputRef}
-            />
-            <Camera
-              className="absolute top-1/2 left-80 cursor-pointer text-base-300"
-              size={30}
-              onClick={() => fileInputRef.current?.click()}
+              onChange={handleThumbnailChange}
             />
           </div>
         </div>
@@ -102,9 +116,6 @@ function EditPage({ course }: any) {
               setFormData({ ...formData, title: e.target.value })
             }
           />
-          <p className="text-sm text-gray-500 mt-1">
-            Title must be at least 5 characters long.
-          </p>
         </div>
 
         <div className="form-control mb-5">
@@ -114,6 +125,7 @@ function EditPage({ course }: any) {
             onChange={(content) =>
               setFormData({ ...formData, description: content })
             }
+            className="quill-border"
             placeholder="Write a detailed description"
           />
         </div>

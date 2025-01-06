@@ -57,7 +57,7 @@ function MyCourses() {
               >
                 <figure>
                   <img
-                    src="https://via.placeholder.com/150"
+                    src={course?.thumbnail || "https://via.placeholder.com/350x200"}
                     alt="Placeholder"
                     className="w-full h-52 object-cover"
                   />
