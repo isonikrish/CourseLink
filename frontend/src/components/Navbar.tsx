@@ -41,7 +41,7 @@ function Navbar() {
 
         {user ? (
           <div className="flex items-center gap-6">
-            <label className="input input-bordered flex items-center gap-2">
+            {/* <label className="input input-bordered flex items-center gap-2">
               <Search className="w-5 h-5" />
               <input
                 type="text"
@@ -50,9 +50,9 @@ function Navbar() {
               />
               <kbd className="kbd kbd-sm">⌘</kbd>
               <kbd className="kbd kbd-sm">K</kbd>
-            </label>
+            </label> */}
 
-            <div className="dropdown dropdown-end">
+            <div className="dropdown dropdown-end ">
               <button tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="avatar placeholder">
                   <div className="bg-neutral text-neutral-content w-10 h-10 rounded-full flex items-center justify-center">
@@ -65,7 +65,7 @@ function Navbar() {
 
               <ul
                 tabIndex={0}
-                className="menu menu-lg dropdown-content bg-base-100 rounded-lg z-[1] mt-3 w-52 p-2 shadow"
+                className="menu menu-lg dropdown-content bg-base-100 rounded-lg z-[1] mt-3 w-52 p-2 shadow border border-base-300"
               >
                 <li className="border-b border-base-300">
                   <Link to={`/profile/${user?.id}`}>

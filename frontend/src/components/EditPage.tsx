@@ -1,9 +1,12 @@
 import { BookOpenCheck, Trash2, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useCourse } from "../stores/useCourse";
 import { useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import axios from "axios";
+import { BACKEND_URL } from "../utils/backend_url";
+import toast from "react-hot-toast";
 
 function EditPage({ course }: any) {
   const { id } = useParams();
@@ -20,6 +23,8 @@ function EditPage({ course }: any) {
     price: course?.price || 0,
     thumbnail: course?.thumbnail || "",
   });
+
+  const [courseStatus, setCourseStatus] = useState(course?.status || "unpublished");
 
   const { editCourse } = useCourse();
 
@@ -45,7 +50,6 @@ function EditPage({ course }: any) {
     data.append("category", formData.category);
     data.append("price", formData.price);
 
-
     if (formData.thumbnail instanceof File) {
       data.append("thumbnail", formData.thumbnail);
     }
@@ -59,16 +63,44 @@ function EditPage({ course }: any) {
     }
   };
 
+  const handleCourseStatusChange = async () => {
+    try {
+      const res = await axios.put(
+        `${BACKEND_URL}/course/publish-unpublish/${course?.id}`,
+        {},
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        toast.success(res?.data?.msg);
+        setCourseStatus((prevStatus:any) =>
+          prevStatus === "published" ? "unpublished" : "published"
+        );
+      }
+    } catch (error) {
+      toast.error("Error in changing course status");
+    }
+  };
+
+  useEffect(() => {
+    setCourseStatus(course?.status || "unpublished");
+  }, [course?.status]);
+
   return (
     <div className="px-10 py-5">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold">Edit Course</h1>
         <div className="flex gap-3">
-          <button className="btn btn-outline rounded-lg text-green-600 flex items-center gap-2">
-            <BookOpenCheck /> Publish
+          <button
+            className={`btn btn-outline rounded-lg flex items-center gap-2 ${
+              courseStatus === "published" ? "text-red-600" : "text-green-600"
+            }`}
+            onClick={handleCourseStatusChange}
+          >
+            <BookOpenCheck />{" "}
+            {courseStatus === "published" ? "Unpublish" : "Publish"}
           </button>
           <button className="btn rounded-lg text-red-600 flex items-center gap-2">
-            <Trash2 /> Delete
+            <Trash2 />
           </button>
         </div>
       </div>

@@ -118,24 +118,23 @@ export const handleUpdateCourse = async (c: Context) => {
       select: { thumbnail: true },
     });
 
-  
     if (thumbnail && thumbnail.size > 0) {
       const oldFileUrl = currentCourse?.thumbnail;
 
       if (oldFileUrl) {
         const bucketUrl = c.env.bucket_url;
-        const oldFileKey = oldFileUrl.replace(`${bucketUrl}/`, "").split('?')[0]; 
+        const oldFileKey = oldFileUrl
+          .replace(`${bucketUrl}/`, "")
+          .split("?")[0];
         if (oldFileKey) {
           const bucket = c.env.HONO_R2_UPLOAD;
           try {
             await bucket.delete(oldFileKey);
-
           } catch (deleteError) {
             return c.json({ msg: "Failed to delete old file from R2" }, 500);
           }
         }
       }
-
 
       const bucket = c.env.HONO_R2_UPLOAD;
       const fileKey = `thumbnail/${courseId}-${Date.now()}-${thumbnail.name}`;
@@ -152,7 +151,7 @@ export const handleUpdateCourse = async (c: Context) => {
           description,
           price: parseInt(price),
           category,
-          thumbnail: fileUrl, 
+          thumbnail: fileUrl,
         },
       });
     } else {
@@ -173,7 +172,6 @@ export const handleUpdateCourse = async (c: Context) => {
     return c.json({ msg: "Internal Server Error" }, 500);
   }
 };
-
 
 export const handleGetTutor = async (c: Context) => {
   const user = c.get("user");
@@ -207,7 +205,6 @@ export const handleGetTutor = async (c: Context) => {
 
 export const handleChangePermissions = async (c: Context) => {
   const prisma = prismaClient(c);
-  const user = c.get("user");
 
   const { id, permissions } = await c.req.json();
   const parsedId = parseInt(id);
@@ -222,6 +219,27 @@ export const handleChangePermissions = async (c: Context) => {
       },
     });
     return c.json({ msg: "Updated permissions" }, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+};
+
+export const handlePublishUnpublish = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const courseId = parseInt(c.req.param("id"), 10);
+  try {
+    const course = await prisma.course.findUnique({ where: { id: courseId } });
+    if (!course) {
+      return c.json({ msg: "No course found" }, 400);
+    }
+    const updatedCourse = await prisma.course.update({
+      where: { id: courseId },
+      data: {
+        status: course.status === "published" ? "unpublished" : "published",
+      },
+    });
+    return c.json({ msg: `Course ${updatedCourse.status === "published" ? "published" : "unpublished"} successfully` }, 200);
+
   } catch (error) {
     return c.json({ msg: "Internal Server Error" }, 500);
   }

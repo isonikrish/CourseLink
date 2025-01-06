@@ -19,7 +19,7 @@ function Overview({course}:any) {
 
         <div className="stat place-items-center">
           <div className="stat-title">Total Lectures</div>
-          <div className="stat-value">0</div>
+          <div className="stat-value">{course?.Lecture.length}</div>
         </div>
 
         <div className="stat place-items-center">
@@ -33,7 +33,7 @@ function Overview({course}:any) {
           Status:{" "}
           <span
             className={`ml-2 text-primary ${
-              status === "unpublished" ? "text-red-600" : "text-green-600"
+              status === "unpublished" ? "text-red-600" : "text-green-500"
             }`}
           >
             {status}

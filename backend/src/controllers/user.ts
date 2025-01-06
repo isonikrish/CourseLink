@@ -187,6 +187,9 @@ export const handleGetNotifications = async (c: Context) => {
         course: true,
         fromUser: true,
       },
+      orderBy: {
+        id: 'desc',
+      },
     });
     if (notifications.length === 0) {
       return c.json([], 200);

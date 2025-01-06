@@ -93,12 +93,11 @@ function Notifications() {
               className="flex items-start space-x-4 p-4 rounded-lg border border-base-300"
             >
               <div className="flex-shrink-0">
-                <div className="avatar">
-                  <div className="w-12 rounded-full">
-                    <img
-                      alt="Notification Avatar"
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                    />
+              <div className="avatar placeholder">
+                  <div className="bg-neutral text-neutral-content w-10 h-10 rounded-full flex items-center justify-center">
+                    <span className="text-xl font-bold">
+                      {notification?.fromUser.firstName[0]?.toUpperCase()}
+                    </span>
                   </div>
                 </div>
               </div>

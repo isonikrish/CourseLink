@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import PreviewVideo from "./PreviewVideo";
 
 function Lectures({ course }: any) {
-  const openModal = (num: number) => {
+  const openModal = (num: any) => {
     const modal = document.getElementById(`my_modal_${num}`) as HTMLDialogElement;
     if (modal) {
       modal.showModal();
@@ -88,18 +88,20 @@ function Lectures({ course }: any) {
                 </td>
                 <td className="w-1/3">
                   <div className="flex items-center gap-3">
-                    <button className="btn flex items-center gap-2 rounded-lg" onClick={() => openModal(2)}>
+                    <button
+                      className="btn flex items-center gap-2 rounded-lg"
+                      onClick={() => openModal(`2_${index}`)} // Open modal with unique ID
+                    >
                       <Eye className="w-4 h-4" />
                       Preview
                     </button>
-
-                    <dialog id="my_modal_2" className="modal">
+                    <dialog id={`my_modal_2_${index}`} className="modal">
                       <div className="modal-box border border-base-300 rounded-lg relative">
                         <button
                           className="btn btn-md btn-circle absolute top-2 right-2"
                           onClick={(e) => {
                             e.preventDefault();
-                            const modal = document.getElementById("my_modal_2") as HTMLDialogElement;
+                            const modal = document.getElementById(`my_modal_2_${index}`) as HTMLDialogElement;
                             modal?.close();
                           }}
                         >
@@ -114,7 +116,7 @@ function Lectures({ course }: any) {
                       className="btn rounded-lg text-red-600 flex items-center gap-2"
                       onClick={() => removeLecture(lecture?.id)}
                     >
-                      <Trash /> Remove
+                      <Trash />
                     </button>
                   </div>
                 </td>

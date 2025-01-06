@@ -6,6 +6,7 @@ import Logo from "./Logo";
 export function Footer() {
   return (
     <footer className="py-8">
+      <div className="h-[3px] bg-gradient-to-r from-gray-400 via-gray-200 to-gray-600 my-10"></div>
       <div className="container mx-auto px-6 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-2">
         <Logo />
@@ -39,6 +40,7 @@ export function Footer() {
           <p>© {new Date().getFullYear()} CourseLink. All rights reserved.</p>
         </div>
       </div>
+      
     </footer>
   );
 }

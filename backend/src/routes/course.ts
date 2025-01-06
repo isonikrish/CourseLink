@@ -6,6 +6,7 @@ import {
   handleGetCourseWithId,
   handleGetMyCourses,
   handleGetTutor,
+  handlePublishUnpublish,
   handleUpdateCourse,
 } from "../controllers/course";
 import { isTutor } from "../utils/isTutor";
@@ -25,7 +26,7 @@ courseRoutes.put(
   isTutor,
   editAuthorize,
   handleUpdateCourse
-); //TODO= "ADD MIDDLEWARE FOR AUTH LIKE THIS"
+);
 courseRoutes.get("/get-tutor", protectRoute, isTutor, handleGetTutor);
 courseRoutes.put(
   "/change-permissions",
@@ -33,4 +34,5 @@ courseRoutes.put(
   isTutor,
   handleChangePermissions
 );
+courseRoutes.put("/publish-unpublish/:id", protectRoute, isTutor, statusAuthorize, handlePublishUnpublish)
 export default courseRoutes;

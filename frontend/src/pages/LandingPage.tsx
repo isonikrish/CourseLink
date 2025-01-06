@@ -42,7 +42,7 @@ function Home() {
       <div className="h-[3px] bg-gradient-to-r from-gray-400 via-gray-200 to-gray-600 my-10"></div>
 
       <Pricing />
-      <div className="h-[3px] bg-gradient-to-r from-gray-400 via-gray-200 to-gray-600 my-10"></div>
+      
     </div>
   );
 }
