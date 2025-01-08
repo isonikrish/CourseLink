@@ -48,7 +48,8 @@ export const handleGetMyCourses = async (c: Context) => {
         ],
       },
       include: {
-        coTutors: true, // Include co-tutors in the result if needed
+        coTutors: true, 
+        enrollments: true,
       },
     });
     if (courses.length === 0) {
@@ -75,6 +76,7 @@ export const handleGetCourseWithId = async (c: Context) => {
             id: true,
           },
         },
+        enrollments: true,
         Lecture: {
           select: {
             tutorId: true,
@@ -238,8 +240,82 @@ export const handlePublishUnpublish = async (c: Context) => {
         status: course.status === "published" ? "unpublished" : "published",
       },
     });
-    return c.json({ msg: `Course ${updatedCourse.status === "published" ? "published" : "unpublished"} successfully` }, 200);
+    return c.json(
+      {
+        msg: `Course ${
+          updatedCourse.status === "published" ? "published" : "unpublished"
+        } successfully`,
+      },
+      200
+    );
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+};
 
+export const handleGetCourses = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const category = c.req.param("category");
+
+  try {
+    const courses = await prisma.course.findMany({
+      where: {
+        category: category,
+        status: "published",
+      },include: {
+        tutor: true,
+        coTutors: {
+          select: {
+            tutor: true,
+            id: true,
+          },
+        },
+      }
+    });
+    if (courses.length === 0) {
+      return c.json({ msg: "No courses found" }, 400);
+    }
+
+    return c.json(courses, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+};
+
+
+export const handleGetPublicCourseWithId = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const id = parseInt(c.req.param("id"), 10);
+  try {
+    const course = await prisma.course.findUnique({
+      where: { id: id },
+      include: {
+        tutor: true,
+        coTutors: {
+          select: {
+            tutor: true,
+            permissions: true,
+            id: true,
+          },
+        },
+        enrollments: true,
+        Lecture: {
+          select: {
+            tutorId: true,
+            courseId: true,
+            course: true,
+            tutor: true,
+            title: true,
+            id: true,
+          },
+        },
+      },
+    });
+    if (!course) {
+      return c.json({ msg: "No course found" }, 400);
+    }
+
+    return c.json(course, 200);
   } catch (error) {
     return c.json({ msg: "Internal Server Error" }, 500);
   }

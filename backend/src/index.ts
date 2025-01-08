@@ -3,6 +3,7 @@ import { cors } from "hono/cors";
 import userRoutes from "./routes/user";
 import courseRoutes from "./routes/course";
 import lectureRoutes from "./routes/lecture";
+import enrollRoutes from "./routes/enrollment";
 const app = new Hono();
 app.use(
   "*",
@@ -20,5 +21,7 @@ app.use("*", (c, next) => {
 app.route("/api/v1/user", userRoutes);
 app.route("/api/v1/course", courseRoutes);
 app.route("/api/v1/lecture", lectureRoutes);
+app.route("/api/v1/enroll", enrollRoutes);
+
 
 export default app;

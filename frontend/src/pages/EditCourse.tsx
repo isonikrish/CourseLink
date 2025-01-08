@@ -8,6 +8,7 @@ import { useAuth } from "../stores/useAuth";
 import ManageCoTutors from "../components/ManageCoTutors";
 import NoAccess from "../components/NoAccess";
 import Lectures from "../components/Lectures";
+import Enrollments from "../components/Enrollments";
 
 function EditCourse() {
   const [menu, setMenu] = useState("overview");
@@ -61,6 +62,7 @@ function EditCourse() {
           menu === "manage" && <NoAccess setMenu={setMenu} />
         )}
         {menu === "lectures" && <Lectures course={course} />}
+        {menu === "enrollments" && <Enrollments course={course}/>}
       </div>
     </div>
   );

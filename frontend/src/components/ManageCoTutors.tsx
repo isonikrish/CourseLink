@@ -40,7 +40,7 @@ function ManageCoTutors({ course }: any) {
           <tbody>
             {course?.coTutors.map((coTutor: any) => {
               return (
-                <CoTutor firstName={coTutor?.tutor.firstName} lastName={coTutor?.tutor.lastName} email={coTutor?.tutor.email} id={coTutor?.id} permissions={coTutor?.permissions}/>
+                <CoTutor firstName={coTutor?.tutor.firstName} lastName={coTutor?.tutor.lastName} email={coTutor?.tutor.email} id={coTutor?.id} permissions={coTutor?.permissions} key={coTutor.id}/>
               );
             })}
           </tbody>

@@ -20,6 +20,7 @@ model User {
   sentNotifications     Notifications[] @relation("FromUser")
   receivedNotifications Notifications[] @relation("ToUser")
   uploadedLectures      Lecture[]
+  enrollments  Enrollment[]
 }
 
 model Course {
@@ -35,6 +36,7 @@ model Course {
   coTutors     CoTutor[]
   sentRequests Notifications[]
   Lecture      Lecture[]
+  enrollments  Enrollment[]
 }
 
 model CoTutor {
@@ -65,6 +67,16 @@ model Lecture {
   course   Course @relation(fields: [courseId], references: [id])
   tutor    User   @relation(fields: [tutorId], references: [id])
   video String
+}
+
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  enrolledAt DateTime @default(now())
+  @@unique([userId, courseId])
 }
 
 enum Role {

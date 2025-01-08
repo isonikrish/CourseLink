@@ -16,7 +16,6 @@ import Profile from "./pages/Profile";
 import MyCourses from "./pages/MyCourses";
 import EditCourse from "./pages/EditCourse";
 import Notifications from "./pages/Notifications";
-
 function App() {
   const { isDarkMode } = useTheme();
   const { fetchUser } = useAuth();
@@ -26,24 +25,29 @@ function App() {
   }, []);
 
   return (
-    <div data-theme={isDarkMode ? "black" : "light"}>
+    <div
+      className={`flex flex-col min-h-screen`}
+      data-theme={isDarkMode ? "black" : "light"}
+    >
       <Navbar />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Authentication />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/create-course" element={<CreateCourse />} />
-        <Route path="/course/:id/edit" element={<EditCourse />} />
-        <Route path="/course/:id" element={<CourseDisplay />} />
-
-        <Route path="/profile/:id" element={<Profile />} />
-        <Route path="/my-courses" element={<MyCourses />} />
-        <Route path="/notifications" element={<Notifications />}/>
-      </Routes>
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Authentication />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/create-course" element={<CreateCourse />} />
+          <Route path="/course/:id/edit" element={<EditCourse />} />
+          <Route path="/course/:id/details" element={<CourseDisplay />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/my-courses" element={<MyCourses />} />
+          <Route path="/notifications" element={<Notifications />} />
+        </Routes>
+      </main>
       <Footer />
       <Toaster />
     </div>
   );
 }
+
 
 export default App;

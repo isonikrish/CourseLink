@@ -1,33 +1,36 @@
-import { FaStar } from "react-icons/fa";
-
-function CourseCard({id}:any) {
+import { Link } from "react-router-dom";
+function CourseCard({ course }: any) {
   return (
-    <div className="w-[350px] border border-base-300 rounded-xl mx-5 my-5">
+    <div className="w-[350px] border border-base-300 rounded-xl mx-5 my-2 bg-base-100">
       <div>
         <img
-          src="https://via.placeholder.com/380x200"
+          src={course?.thumbnail || "https://via.placeholder.com/380x200"}
           className="rounded-t-xl"
         />
       </div>
       <div className="p-4 space-y-3">
-        <h3 className="text-xl font-bold">Helloasjhddddddddddddd world</h3>
-        <div className="flex items-center justify-between gap-2 ">
-          <p className="text-sm">
-            By <span className="font-bold">Hdakshdks {id}</span>
+        <h3 className="text-xl font-bold">{course?.title}</h3>
+        <div className="flex items-center">
+        <p className="text-sm">
+            By{" "}
+            <Link
+              to={`/profile/${course?.tutor?.id}`}
+              className="font-bold text-blue-500 hover:underline"
+            >
+              {course?.tutor?.firstName} {course?.tutor?.lastName}
+            </Link>
           </p>
-
-          <span className="badge badge-outline border-gray-400">Category</span>
         </div>
-        <div className="flex items-center gap-0.5">
-          <span>5</span>
-          <FaStar className="text-yellow-500" />
-          <FaStar className="text-yellow-500" />
-          <FaStar className="text-yellow-500" />
-          <FaStar className="text-yellow-500" />
-          <span>(200)</span>
-        </div>
-        <div className="text-xl font-bold">$89,400</div>
-        <button className="btn w-full rounded-full">View Details</button>
+        <span className="badge badge-outline border-gray-400 mt-3">
+          {course?.category}
+        </span>
+        <div className="text-xl font-bold">₹ {course?.price}</div>
+        <Link
+          className="btn w-full rounded-full"
+          to={`/course/${course?.id}/details`}
+        >
+          View Details
+        </Link>
       </div>
     </div>
   );

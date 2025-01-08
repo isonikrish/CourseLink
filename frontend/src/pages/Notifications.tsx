@@ -81,7 +81,7 @@ function Notifications() {
   return (
     <div className="h-screen pt-24 px-10">
       <h1 className="text-3xl font-bold mb-6">Notifications</h1>
-      <div className="space-y-4">
+      <div className="space-y-4 overflow-y-scroll h-[90%]">
         {!data || data.length === 0 ? (
           <div className="text-center text-lg text-gray-500">
             No notifications available
@@ -90,7 +90,7 @@ function Notifications() {
           data.map((notification: any) => (
             <div
               key={notification.id}
-              className="flex items-start space-x-4 p-4 rounded-lg border border-base-300"
+              className="flex items-start space-x-4 p-4 rounded-lg border border-base-300 "
             >
               <div className="flex-shrink-0">
               <div className="avatar placeholder">
