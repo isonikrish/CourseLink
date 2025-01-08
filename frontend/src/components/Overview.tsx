@@ -32,11 +32,11 @@ function Overview({course}:any) {
         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border border-base-300">
           Status:{" "}
           <span
-            className={`ml-2 text-primary ${
-              status === "unpublished" ? "text-red-600" : "text-green-300"
+            className={`ml-2 ${
+              status === "unpublished" ? "text-red-600" : "text-green-500"
             }`}
           >
-            {status}
+            {status === "published" ? "Published": "Unpublished"}
           </span>
         </span>
         

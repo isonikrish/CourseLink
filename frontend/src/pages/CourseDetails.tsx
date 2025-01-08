@@ -7,7 +7,7 @@ import PurchaseCard from "../components/PurchaseCard";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-function CourseDisplay() {
+function CourseDetails() {
   const { id } = useParams();
   const [showFullDescription, setShowFullDescription] = useState(false);
 
@@ -63,15 +63,62 @@ function CourseDisplay() {
               className="text-blue-500 hover:underline mt-3"
               onClick={toggleDescription}
             >
-              {showFullDescription ? <div className="flex items-center">Show Less <ChevronUp /></div> : <div className="flex items-center">Show More <ChevronDown /></div>}
+              {showFullDescription ? (
+                <div className="flex items-center">
+                  Show Less <ChevronUp />
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  Show More <ChevronDown />
+                </div>
+              )}
             </button>
           )}
         </div>
       </div>
 
+      <div className="p-4 w-1/2">
+        <h2 className="text-2xl font-bold mb-5 mt-5 border-b py-5">
+          Course Content
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="table w-full table-auto">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 text-left text-xl">Lecture</th>
+                <th className="px-4 py-2 text-left text-xl">Instructor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.Lecture?.length > 0 ? (
+                data?.Lecture?.map((lecture: any) => (
+                  <tr key={lecture.id} className="border-t">
+                    <td className="px-4 py-2 ">{lecture.title}</td>
+                    <td className="px-4 py-2">
+                      {lecture.tutor.firstName} {lecture.tutor.lastName}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={2}
+                    className="px-4 py-2 text-center text-gray-500"
+                  >
+                    No lectures available for this course.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <div>
         <div className="flex flex-col w-1/2 p-4">
-          <h2 className="text-2xl font-bold mb-5 mt-5 py-5 border-b">Instructors</h2>
+          <h2 className="text-2xl font-bold mb-5 mt-5 py-5 border-b">
+            Instructors
+          </h2>
           <div className="flex items-center space-x-4 rounded-lg shadow">
             <div className="rounded-full flex items-center justify-center w-16 h-16 border">
               <span className="text-2xl font-bold">
@@ -117,4 +164,4 @@ function CourseDisplay() {
   );
 }
 
-export default CourseDisplay;
+export default CourseDetails;

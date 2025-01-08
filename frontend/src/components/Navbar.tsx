@@ -80,9 +80,9 @@ function Navbar() {
                       <p>My Courses</p>
                     </Link>
                   ) : (
-                    <Link to={"/enrolled-courses"} className="flex gap-3">
+                    <Link to={"/my-enrollments"} className="flex gap-3">
                       <BookOpen className="w-5 h-5" />
-                      <p className="text-wrap">My Enrollments</p>
+                      <p className="text-wrap">Enrollments</p>
                     </Link>
                   )}
                 </li>

@@ -77,7 +77,7 @@ function Profile() {
                       <span>Tutor</span>
                     </div>
                   ) : (
-                    <div className="flex items-center space-x-2 bg-green-500 text-white rounded-full py-2 px-6 shadow-lg transform transition-all duration-300 hover:scale-105">
+                    <div className="flex items-center space-x-2 bg-green-500 text-white rounded-full py-2 px-6 shadow-lg transform transition-all duration-300 hover:scale-105 ml-5">
                       <UserPlus className="w-6 h-6" />
                       <span>Student</span>
                     </div>

@@ -29,7 +29,7 @@ export const handleAddLecture = async (c: Context) => {
         courseId: courseId,
         tutorId: user.id,
         title: title,
-        video: fileUrl
+        video: fileUrl,
       },
     });
 
@@ -68,7 +68,7 @@ export const handleRemoveLecture = async (c: Context) => {
     const bucketUrl = c.env.bucket_url;
 
     if (fileUrl.startsWith(bucketUrl)) {
-      const fileKey = fileUrl.replace(`${bucketUrl}/`, ""); 
+      const fileKey = fileUrl.replace(`${bucketUrl}/`, "");
       const deleteResult = await bucket.delete(fileKey);
     }
     const removedLecture = await prisma.lecture.delete({
@@ -87,6 +87,53 @@ export const handleRemoveLecture = async (c: Context) => {
     });
 
     return c.json({ msg: "Removed the lecture" }, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+};
+
+export const handleGetLectures = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const courseId = parseInt(c.req.param("id"));
+  try {
+    const lectures = await prisma.course.findUnique({
+      where: { id: courseId },
+      include: {
+        Lecture: {
+          select: {
+            tutorId: true,
+            courseId: true,
+            title: true,
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (lectures.length === 0) {
+      return c.json({ msg: "No lectures found for this course" }, 400);
+    }
+
+    return c.json(lectures, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+};
+export const handleGetLecture = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const courseId = parseInt(c.req.param("id"));
+  const lectureId = parseInt(c.req.param("lectureId"));
+  try {
+    const lecture = await prisma.lecture.findUnique({
+      where: { id: lectureId, courseId: courseId },
+    });
+
+
+    if (!lecture) {
+      return c.json({ msg: "No lecture found" }, 400);
+    }
+
+    return c.json(lecture, 200);
   } catch (error) {
     return c.json({ msg: "Internal Server Error" }, 500);
   }

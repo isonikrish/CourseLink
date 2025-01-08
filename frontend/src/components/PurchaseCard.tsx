@@ -1,5 +1,10 @@
-import { Link } from "react-router-dom";
-import { Link as Lifetime, MonitorPlay, Trophy } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Link as Lifetime,
+  MonitorPlay,
+  Trophy,
+  CirclePlay,
+} from "lucide-react";
 import axios from "axios";
 import { BACKEND_URL } from "../utils/backend_url";
 import toast from "react-hot-toast";
@@ -8,8 +13,14 @@ import { useAuth } from "../stores/useAuth";
 
 function PurchaseCard({ course }: any) {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const { user } = useAuth();
   const handleEnroll = async () => {
+    if (!user) {
+      toast.error("You must be logged in to enroll.");
+      return navigate("/login");
+    }
+    if (isLoading) return;
     try {
       setIsLoading(true);
       const res = await axios.post(
@@ -27,7 +38,9 @@ function PurchaseCard({ course }: any) {
     }
   };
 
-  const isEnrolled = course?.enrollments.some((enroll: any) => enroll.userId === user?.id);
+  const isEnrolled = course?.enrollments.some(
+    (enroll: any) => enroll.userId === user?.id
+  );
   return (
     <div className="w-[350px] border border-base-300 rounded-xl mx-5 my-5 bg-base-100">
       <div>
@@ -57,7 +70,9 @@ function PurchaseCard({ course }: any) {
 
           <div className="text-xl font-bold">₹ {course?.price}</div>
           {isEnrolled ? (
-            <button className="btn w-full rounded-full">View Course</button>
+            <button className="btn w-full rounded-full">
+              <CirclePlay /> View Course
+            </button>
           ) : (
             <button
               className="btn w-full rounded-full"

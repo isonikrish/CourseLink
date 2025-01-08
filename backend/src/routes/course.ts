@@ -37,7 +37,7 @@ courseRoutes.put(
   handleChangePermissions
 );
 courseRoutes.put("/publish-unpublish/:id", protectRoute, isTutor, statusAuthorize, handlePublishUnpublish)
-courseRoutes.get("/get-courses/:category", protectRoute, handleGetCourses)
+courseRoutes.get("/get-courses/:category", handleGetCourses)
 courseRoutes.get("/public-course/:id", handleGetPublicCourseWithId);
 
 
