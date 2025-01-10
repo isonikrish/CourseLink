@@ -6,6 +6,7 @@ import {
   handleGetCourses,
   handleGetCourseWithId,
   handleGetMyCourses,
+  handleGetMyEnrolledCourse,
   handleGetPublicCourseWithId,
   handleGetTutor,
   handlePublishUnpublish,
@@ -16,6 +17,7 @@ import {
   editAuthorize,
   statusAuthorize,
 } from "../utils/authorizeCoTutor";
+import { isEnrolled } from "../utils/isEnrolled";
 
 const courseRoutes = new Hono();
 
@@ -40,5 +42,6 @@ courseRoutes.put("/publish-unpublish/:id", protectRoute, isTutor, statusAuthoriz
 courseRoutes.get("/get-courses/:category", handleGetCourses)
 courseRoutes.get("/public-course/:id", handleGetPublicCourseWithId);
 
+courseRoutes.get("/enrolled-course/:id", protectRoute, isEnrolled, handleGetMyEnrolledCourse);
 
 export default courseRoutes;

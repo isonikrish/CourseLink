@@ -2,13 +2,14 @@ import { useState } from "react";
 import CourseCard from "../components/CourseCard";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { BACKEND_URL } from "../utils/backend_url";
 
 function HomePage() {
   const [category, setCategory] = useState("Technology & Programming");
 
   const fetchCourses = async (category: string) => {
     const response = await axios.get(
-      `http://localhost:8787/api/v1/course/get-courses/${category}`,
+      `${BACKEND_URL}/course/get-courses/${category}`,
       { withCredentials: true }
     );
     return response.data || [];

@@ -320,3 +320,34 @@ export const handleGetPublicCourseWithId = async (c: Context) => {
     return c.json({ msg: "Internal Server Error" }, 500);
   }
 };
+
+
+export const handleGetMyEnrolledCourse = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const id = parseInt(c.req.param("id"), 10);
+  try {
+    const course = await prisma.course.findUnique({
+      where: { id: id },
+      select: {
+        title: true,
+        id: true,
+        status: true,
+        category: true,
+        tutor: true,
+        coTutors: {
+          select: {
+            tutor: true,
+          },
+        },
+        enrollments: true,
+      },
+    });
+    if (!course) {
+      return c.json({ msg: "No course found" }, 400);
+    }
+
+    return c.json(course, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+}

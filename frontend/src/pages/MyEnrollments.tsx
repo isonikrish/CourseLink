@@ -40,7 +40,7 @@ function MyEnrollments() {
     <div className="py-20 px-10">
       <h1 className="text-3xl font-bold mb-6">My Enrollments</h1>
 
-      <div>
+      <div className="grid grid-cols-3">
         {data?.map((data: any) => {
           return (
             <div
@@ -84,7 +84,7 @@ function MyEnrollments() {
                 <button className="btn w-full rounded-md" onClick={()=>navigate(`/course/${data?.course?.id}`)}>
                   <CirclePlay /> View Course
                 </button>
-                <button className="btn btn-outline w-full rounded-md">
+                <button className="btn btn-outline w-full rounded-md" onClick={()=>navigate(`/certificate/${data?.course?.id}`)}>
                   Claim Certificate
                 </button>
               </div>

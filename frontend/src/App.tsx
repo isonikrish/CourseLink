@@ -19,6 +19,7 @@ import Notifications from "./pages/Notifications";
 import MyEnrollments from "./pages/MyEnrollments";
 import Course from "./pages/Course";
 import Lecture from "./pages/Lecture";
+import Certificate from "./pages/Certificate";
 function App() {
   const { isDarkMode } = useTheme();
   const { fetchUser } = useAuth();
@@ -47,6 +48,7 @@ function App() {
           <Route path="/my-enrollments" element={<MyEnrollments />}/>
           <Route path="/course/:id" element={<Course />}/>
           <Route path="/course/:id/lecture/:lectureId" element={<Lecture />}/>
+          <Route path="/certificate/:courseId" element={<Certificate />}/>
         </Routes>
       </main>
       <Footer />
