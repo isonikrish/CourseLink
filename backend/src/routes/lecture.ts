@@ -4,7 +4,7 @@ import { isTutor } from "../utils/isTutor";
 import {
   addAuthorize
 } from "../utils/authorizeCoTutor";
-import { handleAddLecture, handleGetLecture, handleGetLectures, handleRemoveLecture } from "../controllers/lecture";
+import { handleAddLecture, handleGetLecture, handleGetLectures, handleGetProgress, handleRemoveLecture, handleSetProgress } from "../controllers/lecture";
 import { isEnrolled } from "../utils/isEnrolled";
 
 
@@ -15,4 +15,7 @@ lectureRoutes.post("/remove/:id",protectRoute, isTutor, handleRemoveLecture);
 lectureRoutes.get("/get-lectures/:id", protectRoute, isEnrolled, handleGetLectures)
 
 lectureRoutes.get("/get-lecture/:id/:lectureId", protectRoute, isEnrolled, handleGetLecture)
+
+lectureRoutes.post("/progress/:lectureId", protectRoute, handleSetProgress)
+lectureRoutes.get("/progress/:lectureId", protectRoute,handleGetProgress)
 export default lectureRoutes

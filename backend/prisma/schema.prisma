@@ -20,7 +20,8 @@ model User {
   sentNotifications     Notifications[] @relation("FromUser")
   receivedNotifications Notifications[] @relation("ToUser")
   uploadedLectures      Lecture[]
-  enrollments  Enrollment[]
+  enrollments           Enrollment[]
+  watchHistory          Progress[]
 }
 
 model Course {
@@ -60,23 +61,37 @@ model Notifications {
 }
 
 model Lecture {
-  id       Int    @id @default(autoincrement())
-  tutorId  Int
-  courseId Int
-  title    String
-  course   Course @relation(fields: [courseId], references: [id])
-  tutor    User   @relation(fields: [tutorId], references: [id])
-  video String
+  id            Int        @id @default(autoincrement())
+  tutorId       Int
+  courseId      Int
+  title         String
+  course        Course     @relation(fields: [courseId], references: [id])
+  tutor         User       @relation(fields: [tutorId], references: [id])
+  video         String
+  userProgress Progress[]
 }
 
 model Enrollment {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  courseId  Int
-  course    Course   @relation(fields: [courseId], references: [id])
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  courseId   Int
+  course     Course   @relation(fields: [courseId], references: [id])
   enrolledAt DateTime @default(now())
+
   @@unique([userId, courseId])
+}
+
+model Progress {
+  id          Int     @id @default(autoincrement())
+  userId      Int
+  currentTime Float
+  duration  Float
+  lectureId   Int
+  user        User    @relation(fields: [userId], references: [id])
+  lecture     Lecture @relation(fields: [lectureId], references: [id])
+
+  @@unique([userId, lectureId])
 }
 
 enum Role {

@@ -74,34 +74,52 @@ function Course() {
         <span className="text-lg font-semibold">Back</span>
       </div>
       <div className="grid grid-cols-4 gap-6 justify-center">
-        {data.Lecture.map((lecture: any, index: number) => (
-          <div key={index} className="w-[400px] border rounded-lg">
-            <div className="w-full h-40">
-              <Thumbnail title={lecture?.title} />
-            </div>
+        {data.Lecture.map((lecture: any, index: number) => {
+          const userProgress = lecture?.userProgress?.[0];
+          const progressPercentage = userProgress
+            ? Math.floor(
+                (userProgress.currentTime / userProgress.duration) * 100
+              )
+            : 0;
+          return (
+            <div key={index} className="w-[400px] border rounded-lg p-0">
+              <div className="w-full mb-5">
+                <div className="h-40">
+                  <Thumbnail title={lecture?.title} />
+                </div>
 
-            <div className="p-4 flex flex-col justify-between">
-              <h3 className="text-lg font-semibold mb-2">{lecture?.title}</h3>
-              <div className="flex justify-between items-center">
-                <button
-                  className="flex items-center justify-center w-10 h-10 rounded-full"
-                  title="Bookmark Lecture"
-                >
-                  <Bookmark className="w-8 h-8" />
-                </button>
-                <button
-                  className="flex items-center justify-center w-10 h-10 rounded-full"
-                  title="Play Lecture"
-                  onClick={() =>
-                    navigate(`/course/${parsedId}/lecture/${lecture?.id}`)
-                  }
-                >
-                  <Play className="w-8 h-8" />
-                </button>
+                <div className="w-full bg-gray-300 h-2 rounded-full">
+                  <div
+                    className="h-full bg-green-500 rounded-full"
+                    style={{ width: `${progressPercentage}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="p-4 flex flex-col justify-between">
+                <h3 className="text-lg font-semibold mb-2">{lecture?.title}</h3>
+
+                <div className="flex justify-between items-center">
+                  <button
+                    className="flex items-center justify-center w-10 h-10 rounded-full"
+                    title="Bookmark Lecture"
+                  >
+                    <Bookmark className="w-8 h-8" />
+                  </button>
+                  <button
+                    className="flex items-center justify-center w-10 h-10 rounded-full"
+                    title="Play Lecture"
+                    onClick={() =>
+                      navigate(`/course/${parsedId}/lecture/${lecture?.id}`)
+                    }
+                  >
+                    <Play className="w-8 h-8" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

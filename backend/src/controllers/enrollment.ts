@@ -55,6 +55,21 @@ export const handleGetMyEnrollments = async (c: Context) =>{
         course: {
           include: {
             tutor: true,
+            Lecture: {
+              select: {
+                tutorId: true,
+                courseId: true,
+                title: true,
+                id: true,
+                userProgress: {
+                  where: { userId: user.id },
+                  select: {
+                    currentTime: true,
+                    duration: true,
+                  },
+                },
+              },
+            }
           }
         },
       }

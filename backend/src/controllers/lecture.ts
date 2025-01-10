@@ -95,6 +95,7 @@ export const handleRemoveLecture = async (c: Context) => {
 export const handleGetLectures = async (c: Context) => {
   const prisma = prismaClient(c);
   const courseId = parseInt(c.req.param("id"));
+  const user = c.get("user")
   try {
     const lectures = await prisma.course.findUnique({
       where: { id: courseId },
@@ -105,6 +106,13 @@ export const handleGetLectures = async (c: Context) => {
             courseId: true,
             title: true,
             id: true,
+            userProgress: {
+              where: { userId: user.id },
+              select: {
+                currentTime: true,
+                duration: true,
+              },
+            },
           },
         },
       },
@@ -123,11 +131,11 @@ export const handleGetLecture = async (c: Context) => {
   const prisma = prismaClient(c);
   const courseId = parseInt(c.req.param("id"));
   const lectureId = parseInt(c.req.param("lectureId"));
+  const user = c.get("user")
   try {
     const lecture = await prisma.lecture.findUnique({
       where: { id: lectureId, courseId: courseId },
     });
-
 
     if (!lecture) {
       return c.json({ msg: "No lecture found" }, 400);
@@ -138,3 +146,68 @@ export const handleGetLecture = async (c: Context) => {
     return c.json({ msg: "Internal Server Error" }, 500);
   }
 };
+
+export const handleSetProgress = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const { duration, currentTime } = await c.req.json();
+  const lectureId = parseInt(c.req.param("lectureId"));
+  const user = c.get("user");
+  try {
+    if (!duration || !currentTime || !lectureId)
+      return c.json({ msg: "Inputs are incorrect" }, 400);
+
+    const parsedDuration = parseFloat(duration);
+    const parsedCurrentTime = parseFloat(currentTime);
+
+    const existingProgress = await prisma.progress.findFirst({
+      where: {
+        lectureId,
+        userId: user.id,
+      },
+    });
+
+    if (existingProgress) {
+      await prisma.progress.update({
+        where: { id: existingProgress.id },
+        data: {
+          duration: parsedDuration,
+          currentTime: parsedCurrentTime,
+        },
+      });
+    } else {
+      await prisma.progress.create({
+        data: {
+          userId: user.id,
+          lectureId: lectureId,
+          duration: parsedDuration,
+          currentTime: parsedCurrentTime,
+        },
+      });
+    }
+    return c.json({ msg: "Updated Progress" }, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+};
+export const handleGetProgress = async (c:Context) =>{
+  const prisma = prismaClient(c);
+  const lectureId = parseInt(c.req.param("lectureId"));
+  const user = c.get("user");
+
+  try {
+    if(!lectureId){
+      return c.json({msg: "No Lecture Id provided"},400);
+    }
+
+    const progress = await prisma.progress.findFirst({
+      where: {lectureId: lectureId, userId: user.id}
+    })
+
+    if (!progress) {
+      return c.json({ msg: "No progress found for this user and lecture" }, 404);
+    }
+    return c.json(progress, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal Server Error" }, 500);
+  }
+}

@@ -35,6 +35,7 @@ function MyEnrollments() {
       </div>
     );
   }
+  
   return (
     <div className="py-20 px-10">
       <h1 className="text-3xl font-bold mb-6">My Enrollments</h1>
@@ -54,19 +55,7 @@ function MyEnrollments() {
                   }
                   className="rounded-t-xl"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-30 rounded-t-xl"></div>
-                <div
-                  className="radial-progress bg-white text-black absolute right-5 bottom-5"
-                  style={
-                    {
-                      "--value": 50,
-                      "--size": "60px",
-                    } as React.CSSProperties
-                  }
-                  role="progressbar"
-                >
-                  <p className="text-[12px]">100%</p>
-                </div>
+
               </div>
               <div className="p-4 space-y-3">
                 <Link
