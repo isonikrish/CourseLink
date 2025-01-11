@@ -188,7 +188,7 @@ export const handleGetNotifications = async (c: Context) => {
         fromUser: true,
       },
       orderBy: {
-        id: 'desc',
+        id: "desc",
       },
     });
     if (notifications.length === 0) {
@@ -205,7 +205,6 @@ export const handleAcceptRequest = async (c: Context) => {
   const prisma = prismaClient(c);
 
   try {
-    
     const { courseId, tutorId, notificationId, senderId } = await c.req.json();
 
     if (!courseId || !tutorId || !notificationId || !senderId) {
@@ -229,7 +228,7 @@ export const handleAcceptRequest = async (c: Context) => {
     const defaultPermission = "edit";
 
     // Perform database operations in a transaction
-    const result = await prisma.$transaction(async (tx:any) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       const newCoTutor = await tx.coTutor.create({
         data: {
           tutorId: parsedTutorId,
@@ -256,7 +255,25 @@ export const handleAcceptRequest = async (c: Context) => {
 
     return c.json({ msg: "Accepted the request", coTutor: result }, 200);
   } catch (error) {
-    console.error("Error handling accept request:", error);
-    return c.json({ msg: "Internal server error."}, 500);
+    return c.json({ msg: "Internal server error." }, 500);
+  }
+};
+export const handleClearNotifications = async (c: Context) => {
+  const prisma = prismaClient(c);
+  const user = c.get("user");
+  try {
+    if (!user) {
+      return c.json({ msg: "Unauthorized: User not found in context." }, 401);
+    }
+
+    const notifications = await prisma.notifications.deleteMany({
+      where: { toId: user.id },
+    });
+    if (notifications.count === 0) {
+      return c.json({ msg: "No notifications found to delete." }, 404);
+    }
+    return c.json({ msg: "Deleted notifications successfully" }, 200);
+  } catch (error) {
+    return c.json({ msg: "Internal server error." }, 500);
   }
 };

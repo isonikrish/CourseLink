@@ -5,7 +5,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../utils/backend_url";
 import Thumbnail from "../components/Thumbnail";
 import toast from "react-hot-toast";
-import { Bookmark, MoveLeft, Play } from "lucide-react";
+import { MoveLeft, Play } from "lucide-react";
 
 function Course() {
   const navigate = useNavigate();
@@ -96,16 +96,10 @@ function Course() {
                 </div>
               </div>
 
-              <div className="p-4 flex flex-col justify-between">
+              <div className="p-4 flex items-center justify-between">
                 <h3 className="text-lg font-semibold mb-2">{lecture?.title}</h3>
 
                 <div className="flex justify-between items-center">
-                  <button
-                    className="flex items-center justify-center w-10 h-10 rounded-full"
-                    title="Bookmark Lecture"
-                  >
-                    <Bookmark className="w-8 h-8" />
-                  </button>
                   <button
                     className="flex items-center justify-center w-10 h-10 rounded-full"
                     title="Play Lecture"

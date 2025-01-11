@@ -27,11 +27,10 @@ function CreateCourse() {
         navigate(`/course/${response.data.id}`);
 
         toast.success("Course Created");
-      } else {
-        toast.error("Failed to create course.");
       }
-    } catch (error) {
-      toast.error("Error creating course. Please try again.");
+    } catch (error:any) {
+      toast.error(error?.response?.data?.msg);
+      console.log(error)
     } finally {
       setIsLoading(false);
     }

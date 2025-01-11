@@ -9,6 +9,7 @@ function AddLecture({ course }: any) {
     title: "",
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false); // Add a loading state
 
   const addLecture = async () => {
     if (!lectData.title || lectData.title.length < 5) {
@@ -20,6 +21,7 @@ function AddLecture({ course }: any) {
       toast.error("Please upload a lecture video.");
       return;
     }
+
     const validVideoTypes = [
       "video/mp4",
       "video/avi",
@@ -30,6 +32,8 @@ function AddLecture({ course }: any) {
       toast.error("Invalid file type. Please upload a video file.");
       return;
     }
+
+    setLoading(true); // Set loading to true when the request starts
     try {
       if (course?.id) {
         const formData = new FormData();
@@ -53,9 +57,10 @@ function AddLecture({ course }: any) {
           setSelectedFile(null);
         }
       }
-    } catch (error) {
-      console.error("Error adding lecture:", error);
-      toast.error("Error in adding lecture.");
+    } catch (error: any) {
+      toast.error(error?.response?.data.msg);
+    } finally {
+      setLoading(false); // Set loading to false after request completes
     }
   };
 
@@ -93,10 +98,16 @@ function AddLecture({ course }: any) {
         </div>
 
         <button
-          className="btn border-base-300 mt-10 flex items-center"
-          onClick={()=>addLecture()}
+          className={`btn border-base-300 mt-10 flex items-center`} // Apply loading state class
+          onClick={() => addLecture()}
+          disabled={loading}
         >
-          <Plus className="mr-2" /> Add Lecture
+          {loading ? (
+            <span className="loading loading-dots loading-md"></span> // Display loading spinner when loading
+          ) : (
+            <Plus className="mr-2" />
+          )}
+          Add Lecture
         </button>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { EllipsisVertical, X } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import axios from "axios";
 import { BACKEND_URL } from "../utils/backend_url";
 import toast from "react-hot-toast";
@@ -115,12 +115,6 @@ function CoTutor({ firstName, lastName, email, permissions, id }: any) {
             >
               Save Changes
             </button>
-            <li className="cursor-pointer p-2 transition border-t border-base-200 w-full text-red-500">
-              <div className="flex items-center">
-                <X />
-                <span className="ml-2">Remove Co-Tutor</span>
-              </div>
-            </li>
           </ul>
         </div>
       </td>

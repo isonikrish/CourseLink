@@ -22,6 +22,7 @@ model User {
   uploadedLectures      Lecture[]
   enrollments           Enrollment[]
   watchHistory          Progress[]
+  subscription          SubscriptionPlan @default(FREE)
 }
 
 model Course {
@@ -114,4 +115,8 @@ enum Notification {
   request
   accepted
   delete_lecture
+}
+enum SubscriptionPlan {
+  FREE
+  PREMIUM
 }

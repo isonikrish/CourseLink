@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import {
   Link as Lifetime,
-  MonitorPlay,
   Trophy,
   CirclePlay,
+  Users,
+  Video,
 } from "lucide-react";
 import axios from "axios";
 import { BACKEND_URL } from "../utils/backend_url";
@@ -70,7 +71,7 @@ function PurchaseCard({ course }: any) {
 
           <div className="text-xl font-bold">₹ {course?.price}</div>
           {isEnrolled ? (
-            <button className="btn w-full rounded-full">
+            <button className="btn w-full rounded-full" onClick={()=>navigate(`/course/${course?.id}`)}>
               <CirclePlay /> View Course
             </button>
           ) : (
@@ -93,16 +94,20 @@ function PurchaseCard({ course }: any) {
           <h4 className="text-lg font-semibold mb-2">This course includes:</h4>
           <ul className="space-y-2">
             <li className="flex items-center text-sm">
-              <MonitorPlay className="text-green-500 mr-2" />
-              3.5 hours on-demand video
-            </li>
-            <li className="flex items-center text-sm">
               <Lifetime className="text-green-500 mr-2" />
               Full lifetime access
             </li>
             <li className="flex items-center text-sm">
+              <Users className="text-green-500 mr-2" />
+              Access to a collaborative learning community
+            </li>
+            <li className="flex items-center text-sm">
+              <Video className="text-green-500 mr-2" />
+              High-quality, on-demand video lectures
+            </li>
+            <li className="flex items-center text-sm">
               <Trophy className="text-green-500 mr-2" />
-              Certificate of completion
+              Certificate
             </li>
           </ul>
         </div>

@@ -4,7 +4,7 @@ import {
   LogOut,
   Moon,
   Plus,
-  Search,
+  ShoppingBag,
   Sun,
   UserRound,
 } from "lucide-react";
@@ -41,17 +41,6 @@ function Navbar() {
 
         {user ? (
           <div className="flex items-center gap-6">
-            {/* <label className="input input-bordered flex items-center gap-2">
-              <Search className="w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search"
-                className="grow outline-none"
-              />
-              <kbd className="kbd kbd-sm">⌘</kbd>
-              <kbd className="kbd kbd-sm">K</kbd>
-            </label> */}
-
             <div className="dropdown dropdown-end ">
               <button tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="avatar placeholder">
@@ -73,18 +62,21 @@ function Navbar() {
                     Profile
                   </Link>
                 </li>
-                <li>
-                  {isTutor ? (
+                
+                  {isTutor && (
+                    <li>
                     <Link to={"/my-courses"} className="flex gap-3">
                       <BookOpen className="w-5 h-5" />
                       <p>My Courses</p>
                     </Link>
-                  ) : (
-                    <Link to={"/my-enrollments"} className="flex gap-3">
-                      <BookOpen className="w-5 h-5" />
-                      <p className="text-wrap">Enrollments</p>
-                    </Link>
+                    </li>
                   )}
+                
+                <li>
+                  <Link to={"/my-enrollments"} className="flex gap-3">
+                    <ShoppingBag className="w-5 h-5" />
+                    <p className="text-wrap">Enrollments</p>
+                  </Link>
                 </li>
                 <li>
                   <Link to={`/notifications`}>

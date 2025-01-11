@@ -20,7 +20,6 @@ function MyEnrollments() {
         );
         return response.data || [];
       } catch (error) {
-        console.log(error);
         return [];
       }
     },
@@ -35,12 +34,22 @@ function MyEnrollments() {
       </div>
     );
   }
-  
+  if (data.length === 0) {
+    return (
+      <div className="h-screen pt-24 px-10">
+        <h1 className="text-3xl font-bold mb-4">My Enrollments</h1>
+        <div className="flex items-center justify-center px-10">
+          <p className="text-lg text-gray-500">No enrollments found.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="py-20 px-10">
+    <div className="py-24 px-10">
       <h1 className="text-3xl font-bold mb-6">My Enrollments</h1>
 
-      <div className="grid grid-cols-3">
+      <div className="grid grid-cols-4 pt-10">
         {data?.map((data: any) => {
           return (
             <div
@@ -55,7 +64,6 @@ function MyEnrollments() {
                   }
                   className="rounded-t-xl"
                 />
-
               </div>
               <div className="p-4 space-y-3">
                 <Link
@@ -81,10 +89,16 @@ function MyEnrollments() {
                   {data?.course?.category}
                 </span>
                 <div className="text-xl font-bold">₹ {data?.course?.price}</div>
-                <button className="btn w-full rounded-md" onClick={()=>navigate(`/course/${data?.course?.id}`)}>
+                <button
+                  className="btn w-full rounded-md"
+                  onClick={() => navigate(`/course/${data?.course?.id}`)}
+                >
                   <CirclePlay /> View Course
                 </button>
-                <button className="btn btn-outline w-full rounded-md" onClick={()=>navigate(`/certificate/${data?.course?.id}`)}>
+                <button
+                  className="btn btn-outline w-full rounded-md"
+                  onClick={() => navigate(`/certificate/${data?.course?.id}`)}
+                >
                   Claim Certificate
                 </button>
               </div>

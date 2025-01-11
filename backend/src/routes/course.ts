@@ -18,10 +18,11 @@ import {
   statusAuthorize,
 } from "../utils/authorizeCoTutor";
 import { isEnrolled } from "../utils/isEnrolled";
+import { courseLimitCheck } from "../utils/isFree";
 
 const courseRoutes = new Hono();
 
-courseRoutes.post("/create", protectRoute, isTutor, handleCreateCourse);
+courseRoutes.post("/create", protectRoute, isTutor, courseLimitCheck, handleCreateCourse);
 courseRoutes.get("/my-courses", protectRoute, isTutor, handleGetMyCourses);
 courseRoutes.get("/get-course/:id", handleGetCourseWithId);
 courseRoutes.put(

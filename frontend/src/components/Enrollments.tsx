@@ -16,6 +16,21 @@ function Enrollments({ course }: any) {
     staleTime: 1000 * 60 * 5,
   });
 
+  // Function to calculate progress
+  const calculateProgress = (lectures: any[], progress: any[]) => {
+    const completedLectures = lectures.filter((lecture) => {
+      const userProgress = progress.find((p: any) => p.lectureId === lecture.id);
+      return userProgress && userProgress.currentTime > 0;
+    }).length;
+
+    const totalLectures = lectures.length;
+
+    const progressPercentage =
+      totalLectures > 0 ? Math.round((completedLectures / totalLectures) * 100) : 0;
+
+    return { completedLectures, totalLectures, progressPercentage };
+  };
+
   if (isLoading) {
     return (
       <div className="h-screen pt-24 px-10">
@@ -25,6 +40,7 @@ function Enrollments({ course }: any) {
       </div>
     );
   }
+
   if (isError) return <div>Failed to fetch enrollments. Please try again.</div>;
 
   return (
@@ -33,7 +49,7 @@ function Enrollments({ course }: any) {
         <h1 className="text-3xl font-bold">Enrollments</h1>
       </div>
 
-      <div className="overflow-x-auto">
+      <div>
         <table className="table w-full">
           <thead>
             <tr>
@@ -44,37 +60,53 @@ function Enrollments({ course }: any) {
             </tr>
           </thead>
           <tbody>
-            {data?.map((enrollment: any, index: number) => (
-              <tr key={enrollment.id} className="border-t">
-                <td className="py-2 px-4">{index + 1}</td>
-                <td className="py-2 px-4">
-                  <Link
-                    to={`/profile/${enrollment?.user.id}`}
-                    className="hover:underline"
-                  >
-                    {enrollment.user?.firstName} {enrollment.user?.lastName}
-                  </Link>
-                </td>
-                <td className="py-2 px-4">{enrollment.user?.email}</td>
-                <td className="py-2 px-4">
-                  <div
-                    className="radial-progress text-green-500 "
-                    style={
-                      {
-                        "--value": enrollment.progress || 100,
-                        "--size": "50px",
-                      } as React.CSSProperties
-                    }
-                    role="progressbar"
-                  >
-                    <p className="text-[12px]">{enrollment.progress || 100}%</p>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {data?.map((enrollment: any, index: number) => {
+              const progress = enrollment.course.Lecture.flatMap((lecture: any) =>
+                lecture.progress ? [{ ...lecture.progress, lectureId: lecture.id }] : []
+              );
+
+              const { completedLectures, totalLectures, progressPercentage } =
+                calculateProgress(enrollment.course.Lecture, progress);
+
+              return (
+                <tr key={enrollment.id} className="border-t">
+                  <td className="py-2 px-4">{index + 1}</td>
+                  <td className="py-2 px-4">
+                    <Link
+                      to={`/profile/${enrollment?.user.id}`}
+                      className="hover:underline"
+                    >
+                      {enrollment.user?.firstName} {enrollment.user?.lastName}
+                    </Link>
+                  </td>
+                  <td className="py-2 px-4">{enrollment.user?.email}</td>
+                  <td className="py-2 px-4">
+                    <div className="card w-60 bg-base-100 shadow-xl border border-base-300 rounded">
+                      <div className="card-body">
+
+                        <p>
+                          Completed {completedLectures} of {totalLectures} lectures
+                        </p>
+                        <progress
+                          className="progress progress-accent w-full"
+                          value={progressPercentage}
+                          max="100"
+                        ></progress>
+                        <div className="flex justify-between text-xs text-gray-600">
+                          <span>{progressPercentage}%</span>
+                          <span>
+                            {completedLectures}/{totalLectures} Lectures
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
             {data?.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-4 text-gray-500">
+                <td colSpan={4} className="text-center py-4 text-gray-500">
                   No enrollments found.
                 </td>
               </tr>

@@ -3,10 +3,11 @@ import { BACKEND_URL } from "../utils/backend_url";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useAuth } from "../stores/useAuth";
+import { Trash } from "lucide-react";
 
 function Notifications() {
   const { user } = useAuth();
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["notifications", user?.id],
     queryFn: async () => {
       try {
@@ -56,6 +57,21 @@ function Notifications() {
     }
   };
 
+  const handleClearNotifications = async () => {
+    const response = await axios.delete(
+      `${BACKEND_URL}/user/clear-notifications`,
+      {
+        withCredentials: true,
+      }
+    );
+    if (response.status === 200) {
+      toast.success("Cleared notifications");
+      refetch();
+    }else{
+      toast.error("Error in clearing notifications")
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="h-screen pt-24 px-10">
@@ -80,7 +96,14 @@ function Notifications() {
 
   return (
     <div className="h-screen pt-24 px-10">
-      <h1 className="text-3xl font-bold mb-6">Notifications</h1>
+      '
+      <div className="flex justify-between items-center pb-10">
+        <h1 className="text-3xl font-bold mb-6">Notifications</h1>
+        <button className="btn" onClick={handleClearNotifications}>
+          <Trash />
+          Clear
+        </button>
+      </div>
       <div className="space-y-4 overflow-y-scroll h-[90%]">
         {!data || data.length === 0 ? (
           <div className="text-center text-lg text-gray-500">
@@ -93,7 +116,7 @@ function Notifications() {
               className="flex items-start space-x-4 p-4 rounded-lg border border-base-300 "
             >
               <div className="flex-shrink-0">
-              <div className="avatar placeholder">
+                <div className="avatar placeholder">
                   <div className="bg-neutral text-neutral-content w-10 h-10 rounded-full flex items-center justify-center">
                     <span className="text-xl font-bold">
                       {notification?.fromUser.firstName[0]?.toUpperCase()}

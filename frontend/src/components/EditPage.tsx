@@ -188,15 +188,16 @@ function EditPage({ course }: any) {
             <input
               type="number"
               min={0}
+              max={0}
               placeholder="Enter price"
               className="input input-bordered w-full"
               value={formData.price}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  price: Math.max(0, parseInt(e.target.value, 10) || 0),
-                })
-              }
+              // onChange={(e) =>
+              //   setFormData({
+              //     ...formData,
+              //     price: Math.max(0, parseInt(e.target.value, 10) || 0),
+              //   })
+              // }
             />
           </div>
         </div>

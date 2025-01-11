@@ -45,8 +45,7 @@ function HomePage() {
           </select>
         </div>
 
-        <div className="flex flex-wrap gap-4">
-          
+        <div className="flex flex-wrap gap-4 px-20 py-10">
           {Array.isArray(data) && data.length > 0 ? (
             data.map((course: any) => (
               <CourseCard key={course?.id} course={course} />
@@ -57,7 +56,7 @@ function HomePage() {
                 No courses available in this category.
               </p>
             </div>
-          )} 
+          )}
         </div>
       </div>
     </div>

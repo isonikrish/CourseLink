@@ -6,11 +6,12 @@ import {
 } from "../utils/authorizeCoTutor";
 import { handleAddLecture, handleGetLecture, handleGetLectures, handleGetProgress, handleRemoveLecture, handleSetProgress } from "../controllers/lecture";
 import { isEnrolled } from "../utils/isEnrolled";
+import { addlectureLimitCheck } from "../utils/isFree";
 
 
 const lectureRoutes= new Hono();
 
-lectureRoutes.post("/add/:id", protectRoute, isTutor,addAuthorize, handleAddLecture );
+lectureRoutes.post("/add/:id", protectRoute, isTutor,addAuthorize, addlectureLimitCheck, handleAddLecture );
 lectureRoutes.post("/remove/:id",protectRoute, isTutor, handleRemoveLecture);
 lectureRoutes.get("/get-lectures/:id", protectRoute, isEnrolled, handleGetLectures)
 

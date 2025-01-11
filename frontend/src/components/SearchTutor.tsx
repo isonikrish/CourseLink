@@ -62,7 +62,6 @@ function SearchTutor({courseId}: any) {
               onClick={() => searchTutor()}
             >
               <Search className="w-5 h-5" />
-              <span className="text-base">Search</span>
             </div>
           </label>
         </div>
