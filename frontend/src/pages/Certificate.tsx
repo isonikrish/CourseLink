@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 
 import html2canvas from "html2canvas";
 import { Book, Download } from "lucide-react";
-import { useEffect } from "react";
 
 const replaceOklchColor = (style: string) => {
   return style.replace(/oklch\([^\)]+\)/g, "rgb(0, 0, 0)");
@@ -34,7 +33,7 @@ function Certificate() {
     }
   };
 
-  const { data, isLoading , refetch} = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["certificate", courseId],
     queryFn: () => fetchEnrolledCourse(),
     staleTime: 1000 * 60 * 5,

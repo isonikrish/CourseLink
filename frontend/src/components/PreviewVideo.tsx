@@ -1,5 +1,5 @@
 
-function PreviewVideo({ video, thumbnailTitle }: any) {
+function PreviewVideo({ video }: any) {
   return (
     <div className="px-10 text-center w-1/2">
       <div className="flex justify-between">

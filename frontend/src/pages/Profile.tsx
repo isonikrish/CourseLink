@@ -9,7 +9,7 @@ import { useAuth } from "../stores/useAuth";
 function Profile() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["user", id],
     queryFn: async () => {
       try {

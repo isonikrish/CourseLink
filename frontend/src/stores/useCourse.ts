@@ -9,7 +9,7 @@ type Store = {
   fetchCourse: (id: Number) => Promise<course> | null;
   editCourse: (id:Number , data: any) => void;
 };
-export const useCourse = create<Store>((set) => ({
+export const useCourse = create<Store>(() => ({
   createCourse: async (data: courseFromData) => {
     const response = await axios.post(`${BACKEND_URL}/course/create`, data, {
       withCredentials: true,

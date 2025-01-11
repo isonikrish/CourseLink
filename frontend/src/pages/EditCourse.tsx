@@ -36,10 +36,10 @@ function EditCourse() {
     (coTutor: any) =>
       coTutor.tutor.id === user?.id && coTutor.permissions.includes("edit")
   );
-  const hasAddPermission: any = course?.coTutors?.some(
-    (coTutor: any) =>
-      coTutor.tutor.id === user?.id && coTutor.permissions.includes("add")
-  );
+  // const hasAddPermission: any = course?.coTutors?.some(
+  //   (coTutor: any) =>
+  //     coTutor.tutor.id === user?.id && coTutor.permissions.includes("add")
+  // );
 
   const isMainTutor: any = course?.tutorId === user?.id;
   const hasManagePermission: any = course?.tutorId === user?.id;

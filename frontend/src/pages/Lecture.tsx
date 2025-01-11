@@ -97,7 +97,7 @@ function Lecture() {
 
           if (percentage >= lastMilestone + 10) {
             lastMilestone = Math.floor(percentage / 10) * 10;
-            const res = await axios.post(
+            await axios.post(
               `${BACKEND_URL}/lecture/progress/${parsedLectureId}`,
               { currentTime, duration },
               { withCredentials: true }
