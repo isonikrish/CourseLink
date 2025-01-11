@@ -8,7 +8,7 @@ type sidebarProp = {
 
 const Sidebar = ({ setMenu, menu }: sidebarProp) => {
   return (
-    <aside className="flex flex-col w-64 overflow-y-auto h-1/2 border-r border-base-200 pt-16">
+    <aside className="flex flex-col w-64 overflow-y-auto h-1/2 border-r border-base-300 pt-16">
       <div className="flex flex-col justify-between flex-1">
         <nav>
           <div
