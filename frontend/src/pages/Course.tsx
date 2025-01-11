@@ -73,7 +73,7 @@ function Course() {
         <MoveLeft className="w-6 h-6" />
         <span className="text-lg font-semibold">Back</span>
       </div>
-      <div className="grid grid-cols-4 gap-6 justify-center">
+      <div className="grid grid-cols-3 gap-6 justify-center">
         {data.Lecture.map((lecture: any, index: number) => {
           const userProgress = lecture?.userProgress?.[0];
           const progressPercentage = userProgress
