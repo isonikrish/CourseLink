@@ -3,7 +3,7 @@ import { setCookie } from "hono/cookie";
 import { sign } from "hono/jwt";
 
 export const generateTokenAndSetCookie = async (payload: any, c: Context) => {
-  const isProduction = false;
+  const isProduction = true;
   try {
     const jwt = await sign(
       {

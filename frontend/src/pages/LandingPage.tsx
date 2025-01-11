@@ -34,10 +34,10 @@ function LandingPage() {
           </h1>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4">
             with{" "}
-            <span className="bg-gradient-to-r from-purple-500 to-purple-700 text-transparent bg-clip-text font-extrabold">
+            <span className="bg-gradient-to-r from-gray-500 to-gray-500 text-transparent bg-clip-text font-extrabold text-5xl">
               CourseLink
             </span>{" "}
-            <span className="inline-block text-purple-700">🤝</span>
+            <span className="inline-block text-base-300 text-5xl">🤝</span>
           </h2>
           <p className="mt-4 text-lg sm:text-xl text-gray-500">
             A platform that brings tutors and students together to create
@@ -45,13 +45,13 @@ function LandingPage() {
           </p>
           <div className="flex flex-wrap justify-center mt-8 gap-6">
             <Link
-              className="btn bg-purple-500 text-white rounded-lg hover:bg-purple-400 px-7 text-lg md:text-xl"
+              className="btn bg-base-300 rounded-lg hover:bg-base-200 px-7 text-lg md:text-xl"
               to={"/login"}
             >
               Get started for free <MoveRight />
             </Link>
             <Link
-              className="btn btn-outline rounded-lg px-10 py-3 hover:border-purple-700 text-lg"
+              className="btn btn-outline rounded-lg px-10 hover:border-base-300 text-lg"
               to={"/home"}
             >
               Explore Courses <GraduationCap />
@@ -61,38 +61,73 @@ function LandingPage() {
       </div>
 
       {/* Image Section */}
-      <div className="flex justify-center mt-12 p-4 rounded-2xl w-full">
+      <div className="flex justify-center p-4 rounded-2xl w-full">
         <img
           src={photo}
-          className="w-full md:w-3/4 lg:w-1/2 h-auto rounded-2xl border-4 border-purple-500"
+          className="w-full md:w-3/4 lg:w-1/2 h-auto rounded-2xl border-4 border-base-300"
         />
       </div>
 
       {/* Features Section */}
       <div className="text-center my-16 lg:my-44 border-t py-10 lg:py-20 border-base-300">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">Features</h1>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+          Features
+        </h1>
         <p className="text-base sm:text-lg lg:text-xl text-gray-600 font-medium mb-12">
           From collaborative course creation to student management, CourseLink
           offers everything you need to deliver impactful learning experiences.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
-          {[{ icon: <GraduationCap />, title: "Collaborative Course Creation", description: "Work together with tutors to design and refine courses that engage students." },
-            { icon: <BarChart />, title: "Analytics", description: "Gain valuable insights with analytics on student progress and course performance." },
-            { icon: <Trophy />, title: "Certifiable Learning", description: "Offer students the opportunity to earn certificates upon successful course completion." },
-            { icon: <User />, title: "Student Management", description: "Easily manage and track student progress and performance throughout their learning journey." },
-            { icon: <Monitor />, title: "Multi-Device Access", description: "Access your courses and materials from any device, anytime, ensuring flexible learning experiences." },
-            { icon: <Gamepad />, title: "Interactive Learning", description: "Engage students with interactive quizzes, discussions, and multimedia content for a hands-on learning experience." },
+          {[
+            {
+              icon: <GraduationCap />,
+              title: "Collaborative Course Creation",
+              description:
+                "Work together with tutors to design and refine courses that engage students.",
+            },
+            {
+              icon: <BarChart />,
+              title: "Analytics",
+              description:
+                "Gain valuable insights with analytics on student progress and course performance.",
+            },
+            {
+              icon: <Trophy />,
+              title: "Certifiable Learning",
+              description:
+                "Offer students the opportunity to earn certificates upon successful course completion.",
+            },
+            {
+              icon: <User />,
+              title: "Student Management",
+              description:
+                "Easily manage and track student progress and performance throughout their learning journey.",
+            },
+            {
+              icon: <Monitor />,
+              title: "Multi-Device Access",
+              description:
+                "Access your courses and materials from any device, anytime, ensuring flexible learning experiences.",
+            },
+            {
+              icon: <Gamepad />,
+              title: "Interactive Learning",
+              description:
+                "Engage students with interactive quizzes, discussions, and multimedia content for a hands-on learning experience.",
+            },
           ].map((feature, index) => (
             <div
               key={index}
-              className="flex flex-col items-center p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-base-300"
+              className="flex flex-col items-center p-6 rounded-lg border border-base-300"
             >
-              <div className="text-4xl text-purple-500 mb-4">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl sm:text-2xl font-semibold mb-4">{feature.title}</h3>
-              <p className="text-sm sm:text-base text-gray-500">{feature.description}</p>
+              <div className="text-4xl mb-4">{feature.icon}</div>
+              <h3 className="text-xl sm:text-2xl font-semibold mb-4">
+                {feature.title}
+              </h3>
+              <p className="text-sm sm:text-base text-gray-500">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
@@ -140,7 +175,7 @@ function LandingPage() {
                 </span>
               </p>
               <Link
-                className="btn bg-purple-500 text-white rounded-lg hover:bg-purple-400 px-3 text-lg mt-3"
+                className="btn bg-base-300 rounded-lg hover:bg-base-200 px-3 text-lg mt-3"
                 to={"/login"}
               >
                 Get started

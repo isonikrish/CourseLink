@@ -1,4 +1,4 @@
-const isBackendDeployed = false;
+const isBackendDeployed = true;
 
 export const BACKEND_URL = isBackendDeployed 
   ? "https://courselink-backend.isonikrish.workers.dev/api/v1" 
