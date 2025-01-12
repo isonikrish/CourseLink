@@ -43,6 +43,15 @@ function Enrollments({ course }: any) {
 
   if (isError) return <div>Failed to fetch enrollments. Please try again.</div>;
 
+  // Handle empty data
+  if (!data || data.length === 0) {
+    return (
+      <div className="h-screen pt-24 px-10 flex justify-center items-center">
+        <p className="text-gray-500 text-xl">No enrollments found.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="px-10 py-6">
       <div className="flex justify-between items-center mb-8">
@@ -60,7 +69,7 @@ function Enrollments({ course }: any) {
             </tr>
           </thead>
           <tbody>
-            {data?.map((enrollment: any, index: number) => {
+            {data.map((enrollment: any, index: number) => {
               const progress = enrollment.course.Lecture.flatMap((lecture: any) =>
                 lecture.progress ? [{ ...lecture.progress, lectureId: lecture.id }] : []
               );
@@ -83,7 +92,6 @@ function Enrollments({ course }: any) {
                   <td className="py-2 px-4">
                     <div className="card w-60 bg-base-100 shadow-xl border border-base-300 rounded">
                       <div className="card-body">
-
                         <p>
                           Completed {completedLectures} of {totalLectures} lectures
                         </p>
@@ -104,13 +112,6 @@ function Enrollments({ course }: any) {
                 </tr>
               );
             })}
-            {data?.length === 0 && (
-              <tr>
-                <td colSpan={4} className="text-center py-4 text-gray-500">
-                  No enrollments found.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
